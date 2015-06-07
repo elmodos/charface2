@@ -174,7 +174,7 @@ bool SettingsManager::lastUsedAnalyzeAll()
 
 QString SettingsManager::getUserDataLocation()
 {
-#if defined(Q_OS_LINUX) || defined(Q_WS_MACX)
+#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
 
     return QDir(QDir::homePath()).absoluteFilePath(".local/share");
 
