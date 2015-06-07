@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="document-new">resources/icons/document-new.png</file>
+        <file alias="document-open">resources/icons/document-open.png</file>
+        <file alias="document-save-as">resources/icons/document-save-as.png</file>
+        <file alias="add">resources/icons/add.png</file>
+        <file alias="document-properties">resources/icons/document-properties.png</file>
+        <file alias="edit-find">resources/icons/edit-find.png</file>
+        <file alias="document-page-setup">resources/icons/document-page-setup.png</file>
+        <file alias="edit-select-all">resources/icons/edit-select-all.png</file>
+        <file alias="document-export">resources/icons/document-export.png</file>
+        <file alias="zoom-fit-height">resources/icons/zoom-fit-height.png</file>
+        <file alias="zoom-fit-width">resources/icons/zoom-fit-width.png</file>
+    </qresource>
+</RCC>

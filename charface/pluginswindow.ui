@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PluginsWindow</class>
+ <widget class="QDialog" name="PluginsWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>676</width>
+    <height>308</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QComboBox" name="comboBoxPluginTypes"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonAddPlugin">
+       <property name="text">
+        <string>Add plugin...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonAddPluginDir">
+       <property name="text">
+        <string>Add plugins from directory...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QTableWidget" name="tableWidget">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>false</bool>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::SolidLine</enum>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>true</bool>
+     </property>
+     <property name="rowCount">
+      <number>3</number>
+     </property>
+     <property name="columnCount">
+      <number>5</number>
+     </property>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="horizontalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderVisible">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="verticalHeaderHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <row/>
+     <row/>
+     <row/>
+     <column/>
+     <column/>
+     <column/>
+     <column/>
+     <column/>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="buttonAboutPlugin">
+       <property name="text">
+        <string>About plugin...</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="labelPluginPath">
+       <property name="text">
+        <string>plugin full file path here</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonClose">
+       <property name="text">
+        <string>Close</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonAddPlugin</sender>
+   <signal>clicked()</signal>
+   <receiver>PluginsWindow</receiver>
+   <slot>onLoadPlugin()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>449</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>145</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonClose</sender>
+   <signal>clicked()</signal>
+   <receiver>PluginsWindow</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>665</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>466</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonAddPluginDir</sender>
+   <signal>clicked()</signal>
+   <receiver>PluginsWindow</receiver>
+   <slot>onRegisterPluginsFromDir()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>665</x>
+     <y>36</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>351</x>
+     <y>263</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>comboBoxPluginTypes</sender>
+   <signal>currentIndexChanged(int)</signal>
+   <receiver>PluginsWindow</receiver>
+   <slot>showPluginsList()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>56</x>
+     <y>28</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>170</x>
+     <y>10</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonAboutPlugin</sender>
+   <signal>clicked()</signal>
+   <receiver>PluginsWindow</receiver>
+   <slot>onAboutPlugin()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>49</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>325</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>onLoadPlugin()</slot>
+  <slot>onRegisterPluginsFromDir()</slot>
+  <slot>showPluginsList()</slot>
+  <slot>onAboutPlugin()</slot>
+ </slots>
+</ui>
