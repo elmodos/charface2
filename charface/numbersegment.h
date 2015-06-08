@@ -1,8 +1,8 @@
 #ifndef NUMBERSEGMENT_H
 #define NUMBERSEGMENT_H
 
-#include <QList>
 #include <QString>
+
 #include "typedefs.h"
 
 class NumberSegment

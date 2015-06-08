@@ -3,17 +3,20 @@
 #include <QVBoxLayout>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
-#include <math.h>
 #include <QMenu>
 #include <QAction>
+#include <math.h>
 
 #include "settingsmanager.h"
 #include "pagegraphicsscene.h"
 #include "zonerectitem.h"
 #include "zone.h"
 
-PageGraphicsScene::PageGraphicsScene(QWidget *parent) :
-    QGraphicsScene(parent)
+PageGraphicsScene::PageGraphicsScene(QWidget *parent)
+    : QGraphicsScene(parent),
+      mPageWidth(0),
+      mPageHeight(0),
+      mDeleteWithMouseClick(false)
 {
     //
     mHasImage = false;
@@ -46,10 +49,11 @@ bool PageGraphicsScene::loadPage(Page *page)
 
     //clear scene
     clear();
-    setSceneRect(0,0,0,0);
+    setSceneRect(0, 0, 0, 0);
     mHasImage = false;
     mPixmapItem = NULL;
-    mPageHeight = mPageWidth = 0;
+    mPageHeight = 0;
+    mPageWidth = 0;
     mCurrentItem = NULL;
     mMoveState = MS_None;
 
@@ -107,11 +111,12 @@ void PageGraphicsScene::onChangeZoneType()
 
 void PageGraphicsScene::onDeleteZone()
 {
-    if (!mCurrentItem) return;
+    if (!mCurrentItem)
+        return;
 
     items();
     RectList *zones = mPage->zones();
-    for(RectList::iterator it = zones->begin(); it != zones->end(); it++)
+    for (RectList::iterator it = zones->begin(); it != zones->end(); ++it)
         if (*it == mCurrentItem->zone())
         {
             zones->erase(it);
@@ -222,7 +227,7 @@ void PageGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
                 //find and delete zone from list
                 RectList *zones = mPage->zones();
                 Zone *zone = rectItem->zone();
-                for (RectList::iterator it = zones->begin(); it != zones->end(); it++)
+                for (RectList::iterator it = zones->begin(); it != zones->end(); ++it)
                     if (zone == *it)
                     {
                         zones->erase(it);

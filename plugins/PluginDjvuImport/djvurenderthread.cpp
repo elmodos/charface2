@@ -9,17 +9,16 @@
 
 #define IMAGE_EXT "tiff"
 
-DjvuRenderThread::DjvuRenderThread(QString djvuFileName, IntList pageList, int *incV, QMutex *incM, const QDir &tempDir, int dpi)
+DjvuRenderThread::DjvuRenderThread(QString djvuFileName, IntList pageList, int *incV,
+                                   QMutex *incM, const QDir &tempDir, int dpi):
+    mDjvuFileName(djvuFileName),
+    mIncMutex(incM),
+    mIncValue(incV),
+    mDpi(dpi),
+    mDir(tempDir),
+    stopped(false),
+    mPageList(pageList) // Copy indexes
 {
-    mDjvuFileName = djvuFileName;
-    mIncMutex = incM;
-    mIncValue = incV;
-    mDpi = dpi;
-    mDir = tempDir;
-    stopped = false;
-
-    //copy indexes
-    mPageList = pageList;
 }
 
 void DjvuRenderThread::run()
@@ -35,7 +34,6 @@ void DjvuRenderThread::run()
 
     //suppose everything was ok till now
     bool errorsWereOccured = false;
-    Q_UNUSED(errorsWereOccured);
 
     //enumerating pages
     for (int i = 0; i < mPageList.count(); i++)
@@ -64,6 +62,8 @@ void DjvuRenderThread::run()
         }
 
     }
+
+    Q_UNUSED(errorsWereOccured);
 
     stopped = false;
 }

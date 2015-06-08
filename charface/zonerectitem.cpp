@@ -5,6 +5,9 @@
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
+
+#include "zone.h"
+#include "page.h"
 #include "zonerectitem.h"
 #include "settingsmanager.h"
 #include "pagegraphicsview.h"

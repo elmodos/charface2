@@ -4,6 +4,7 @@
 #include <QDomDocument>
 
 #include "page.h"
+#include "batch.h"
 #include "applicationmanager.h"
 #include "settingsmanager.h"
 

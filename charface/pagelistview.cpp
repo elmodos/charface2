@@ -9,7 +9,7 @@
 #include <QApplication>
 
 #include "pagelistview.h"
-
+#include "pageitemwidget.h"
 
 PageListView::PageListView(QWidget *parent) :
     QScrollArea(parent)

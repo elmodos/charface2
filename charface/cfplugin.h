@@ -1,12 +1,10 @@
 #ifndef CFPLUGIN_H
 #define CFPLUGIN_H
 
-#include <QtPlugin>
 #include <QString>
 #include <QIcon>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QDialog>
-#include <QMetaType>
 #include <QList>
 
 //

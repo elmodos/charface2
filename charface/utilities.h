@@ -5,13 +5,13 @@
 #include <QString>
 #include <QIcon>
 
+#define LOAD_ICON(x) (Utilities::loadIcon(x))
+
 class Utilities : public QObject
 {
 public:
     static QString getCurrentIconsThemeName();
     static QIcon loadIcon(const QString &name);
 };
-
-#define LOAD_ICON(x) (Utilities::loadIcon(x))
 
 #endif // UTILITIES_H

@@ -4,14 +4,15 @@
 #include <QWidget>
 #include <QScrollArea>
 
-#include "pageitemwidget.h"
 #include "typedefs.h"
 
 class PageListView;
+class PageItemWidget;
 
 typedef PageItemWidget* PageItemWidgetRef;
 typedef QVector<PageItemWidgetRef> WidgetList;
 
+// NOTE: Recomend to move to separate file
 class ScrollItemViewDelegate
 {
 public:

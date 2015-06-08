@@ -3,15 +3,15 @@ TEMPLATE = subdirs
 SUBDIRS += \
     charface
     # TODO: Adopt plugins
-    #\
-    #PluginDemoImport \
-    #PluginCuneiformOCR \
-    #PluginScan \
-    #PluginColorEdit \
-    #PluginAnalyze
+    # plugins/PluginDemoImport \
+    # plugins/PluginCuneiformOCR \
+    # plugins/PluginScan \
+    # plugins/PluginColorEdit \
+    # plugins/PluginAnalyze
 
-#!Q_WS_MACX {
-#    SUBDIRS += PluginPDFImport \
-#        PluginDjvuImport \
-#        PluginMultipageTiffImport
-#}
+!macosx {
+    # SUBDIRS += \
+	# plugins/PluginPDFImport \
+	# plugins/PluginDjvuImport \
+	# plugins/PluginMultipageTiffImport
+}

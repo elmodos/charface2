@@ -1,18 +1,13 @@
-#-------------------------------------------------
-#
-# Project created by QtCreator 2012-05-02T20:03:30
-#
-#-------------------------------------------------
-
 QT       += core gui xml widgets
 
 TARGET = charface2
 DESTDIR = ../bin
 TEMPLATE = app
 
-#INCLUDEPATH +=
+# INCLUDEPATH +=
 
-SOURCES += main.cpp\
+SOURCES += \
+    main.cpp \
     applicationmanager.cpp \
     pluginmanager.cpp \
     mainwindow.cpp \
@@ -32,10 +27,10 @@ SOURCES += main.cpp\
     pageitemwidget.cpp \
     pagegraphicsview.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS += \
+    mainwindow.h \
     applicationmanager.h \
     pluginmanager.h \
-    mainwindow.h \
     pluginswindow.h \
     pluginaboutdialog.h \
     batch.h \
@@ -54,7 +49,7 @@ HEADERS  += mainwindow.h \
     typedefs.h \
     pagegraphicsview.h
 
-FORMS    += \
+FORMS += \
     mainwindow.ui \
     pluginswindow.ui \
     pluginaboutdialog.ui \

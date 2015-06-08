@@ -4,9 +4,11 @@
 #include <QMainWindow>
 #include <QLabel>
 
-#include "cfplugin.h"
-#include "pagegraphicsscene.h"
 #include "pagelistview.h"
+#include "cfplugin.h"
+#include "zone.h"
+
+class PageGraphicsScene;
 
 namespace Ui {
 class MainWindow;

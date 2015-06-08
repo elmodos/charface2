@@ -1,4 +1,5 @@
 #include "pluginaboutdialog.h"
+#include "cfplugin.h"
 #include "ui_pluginaboutdialog.h"
 
 PluginAboutDialog::PluginAboutDialog(CFPlugin *plugin) :

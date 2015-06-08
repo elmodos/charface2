@@ -5,6 +5,7 @@
 #include <QImage>
 #include <QSize>
 
+#define settingsManager (SettingsManager::instance())
 
 class SettingsManager : public QObject
 {
@@ -76,10 +77,6 @@ private:
     static SettingsManager *mInstance;
 
     QString dirMustExist(const QString &path);
-
-
 };
-
-#define settingsManager (SettingsManager::instance())
 
 #endif // SETTINGSMANAGER_H

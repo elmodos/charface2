@@ -1,7 +1,7 @@
 #include "myplugin.h"
 #include <QDebug>
-#include <QPushButton>
-#include <QFileDialog>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QFileDialog>
 
 Q_EXPORT_PLUGIN2(CFPluginSimpleImport, CFPluginSimpleImport);
 

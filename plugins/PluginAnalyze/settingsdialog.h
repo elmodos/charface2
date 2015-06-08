@@ -13,7 +13,7 @@ class SettingsDialog : public QDialog
     Q_OBJECT
     
 public:
-    SettingsDialog(CFPluginAnalyzeLeptonica::Settings &settings);
+    explicit SettingsDialog(CFPluginAnalyzeLeptonica::Settings &settings);
     ~SettingsDialog();
     
     //Plugin settings, handled by dialog

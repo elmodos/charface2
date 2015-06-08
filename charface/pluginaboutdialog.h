@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-#include "cfplugin.h"
+class CFPlugin;
 
 namespace Ui {
 class PluginAboutDialog;

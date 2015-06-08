@@ -1,11 +1,11 @@
 #ifndef ZONERECTITEM_H
 #define ZONERECTITEM_H
 
-#include <QObject>
 #include <QGraphicsRectItem>
-#include <zone.h>
-#include <page.h>
 #include <QStaticText>
+
+class Zone;
+class Page;
 
 enum {
     QGraphicsItemCustomRect = QGraphicsItem::UserType + 1
@@ -14,7 +14,7 @@ enum {
 class ZoneRectItem : public QGraphicsRectItem
 {
 public:
-    ZoneRectItem(Zone *zone);
+    explicit ZoneRectItem(Zone *zone);
 
     //
     Zone *zone() { return mZone; }

@@ -20,7 +20,7 @@ class Batch : public QObject
 
 public:
     //
-    Batch(const QString path = QString());
+    explicit Batch(const QString path = QString());
     ~Batch();
 
     //

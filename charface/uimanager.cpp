@@ -1,6 +1,8 @@
 #include "uimanager.h"
 #include "pluginswindow.h"
 #include "pluginaboutdialog.h"
+#include "mainwindow.h"
+#include "cfplugin.h"
 
 UIManager *UIManager::mInstance = NULL;
 

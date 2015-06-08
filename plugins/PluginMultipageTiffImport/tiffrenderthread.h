@@ -25,7 +25,8 @@ class TiffRenderThread : public QThread
     Q_OBJECT
 
 public:
-    TiffRenderThread(const ImgRefList imgrefList, IntList indexes, int *incV, QMutex *incM, const QDir &tempDir);
+    TiffRenderThread(const ImgRefList imgrefList, IntList indexes, int *incV,
+                     QMutex *incM, const QDir &tempDir);
     void stop();
 
     QStringList &processedFiles() { return mProcessedFiles; }
