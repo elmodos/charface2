@@ -1072,5 +1072,3 @@ void MainWindow::plvSetupItem(int index, PageItemWidgetRef itemWidget)
     itemWidget->setTitle( QString("Page %1").arg(index + 1) );
     itemWidget->setPixmap( appManager->batch()->pages()->at(index)->thumb() );
 }
-
-

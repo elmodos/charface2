@@ -129,8 +129,8 @@ void ApplicationManager::addFilesToBatch(const QStringList &list, const QString 
 
 void ApplicationManager::readPages(const IntList &indexes)
 {
+    Q_UNUSED(indexes);
     qDebug() << "void ApplicationManager::readPage(int index)";
-
 
     //Page
     Page *page = 0;//mBatch->pages()->at( indexes );
@@ -159,7 +159,7 @@ void ApplicationManager::readPages(const IntList &indexes)
             Zone *zone = page->zones()->at(i);
             QImage fragment = img->copy( zone->normalized() );
             bool isOk = plugin->doOCR(fragment, result);
-            qDebug() << result;
+            qDebug() << isOk << result;
         }
     }
     else
@@ -167,7 +167,7 @@ void ApplicationManager::readPages(const IntList &indexes)
         //whole page
         QString result;
         bool isOk = plugin->doOCR(*img, result);
-        qDebug() << result;
+        qDebug() << isOk << result;
     }
 
     dialog->closeIfNoMessages();
@@ -261,8 +261,13 @@ void ApplicationManager::analyzePagesBackground(const IntList &indexes)
     emit finishedAnalyze();
 }
 
-void ApplicationManager::addFilesToBatchBackground(const QStringList &list, const QString &tempDirPath, bool interactive)
+void ApplicationManager::addFilesToBatchBackground(const QStringList &list,
+                                                   const QString &tempDirPath,
+                                                   bool interactive)
 {
+    Q_UNUSED(list);
+    Q_UNUSED(tempDirPath);
+    Q_UNUSED(interactive);
 }
 
 
