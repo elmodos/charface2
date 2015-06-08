@@ -7,6 +7,8 @@
 
 #include "cfplugin.h"
 
+#define pluginManager (PluginManager::instance())
+
 typedef QList<CFPlugin*> PluginsList;
 typedef QMultiMap<PluginType, CFPlugin*> PluginsMap;
 
@@ -47,7 +49,5 @@ private:
     CFPluginOCR *mDefaultOCRPlugin;
     CFPluginAnalyze *mDefaultAnalyzePlugin;
 };
-
-#define pluginManager (PluginManager::instance())
 
 #endif // PLUGINMANAGER_H

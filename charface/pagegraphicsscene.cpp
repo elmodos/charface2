@@ -3,9 +3,9 @@
 #include <QVBoxLayout>
 #include <QGraphicsRectItem>
 #include <QGraphicsSceneMouseEvent>
-#include <math.h>
 #include <QMenu>
 #include <QAction>
+#include <math.h>
 
 #include "settingsmanager.h"
 #include "pagegraphicsscene.h"

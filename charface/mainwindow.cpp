@@ -4,8 +4,8 @@
 #include <QIcon>
 #include <QLabel>
 #include <QMessageBox>
-#include <algorithm>
 #include <QScrollBar>
+#include <algorithm>
 
 #include "utilities.h"
 #include "pluginmanager.h"
@@ -13,8 +13,12 @@
 #include "settingsmanager.h"
 #include "pagegraphicsscene.h"
 #include "mainwindow.h"
-#include "ui_mainwindow.h"
 #include "applicationmanager.h"
+#include "ui_mainwindow.h"
+#include "batch.h"
+#include "cfplugin.h"
+#include "pagegraphicsscene.h"
+#include "pageitemwidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),

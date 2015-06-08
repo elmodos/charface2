@@ -2,11 +2,14 @@
 #define APPLICATIONMANAGER_H
 
 #include <QObject>
-#include <QAction>
-#include <QList>
-#include "batch.h"
+
+//#include "batch.h"
 #include "progressdialog.h"
 #include "typedefs.h"
+
+#define appManager (ApplicationManager::instance())
+
+class Batch;
 
 class ApplicationManager : public QObject
 {
@@ -64,6 +67,5 @@ private:
     volatile bool mCancelFlag;
 };
 
-#define appManager (ApplicationManager::instance())
 
 #endif // APPLICATIONMANAGER_H

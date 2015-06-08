@@ -3,8 +3,10 @@
 
 #include <QObject>
 
-#include "mainwindow.h"
-#include "cfplugin.h"
+#define uiManager (UIManager::instance())
+
+class CFPlugin;
+class MainWindow;
 
 class UIManager : public QObject
 {
@@ -35,7 +37,5 @@ private:
     //
     MainWindow *mMainWindow;
 };
-
-#define uiManager (UIManager::instance())
 
 #endif // UIMANAGER_H

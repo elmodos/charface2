@@ -3,7 +3,6 @@
 #include <QDebug>
 #include <QApplication>
 #include <QDesktopServices>
-#include <QDir>
 
 #include "utilities.h"
 #include "settingsmanager.h"

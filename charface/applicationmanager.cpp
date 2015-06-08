@@ -1,13 +1,14 @@
 #include <QApplication>
 #include <QDir>
+#include <QtConcurrent/QtConcurrentRun>
+#include <unistd.h>
 
 #include "applicationmanager.h"
 #include "progressdialog.h"
 #include "pluginmanager.h"
 #include "settingsmanager.h"
 #include "uimanager.h"
-#include <QtConcurrent/QtConcurrentRun>
-#include <unistd.h>
+#include "batch.h"
 
 ApplicationManager * ApplicationManager::mInstance = NULL;
 
@@ -132,8 +133,11 @@ void ApplicationManager::readPages(const IntList &indexes)
     Q_UNUSED(indexes);
     qDebug() << "void ApplicationManager::readPage(int index)";
 
-    //Page
-    Page *page = 0;//mBatch->pages()->at( indexes );
+    // Page
+    Page *page = 0; // mBatch->pages()->at( indexes );
+
+    // WARN: Problem is here! Pointer page == 0!
+
     int zonesCount = page->zones()->count();
 
     //create and setup dialog
