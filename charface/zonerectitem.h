@@ -14,7 +14,7 @@ enum {
 class ZoneRectItem : public QGraphicsRectItem
 {
 public:
-    ZoneRectItem(Zone *zone);
+    explicit ZoneRectItem(Zone *zone);
 
     //
     Zone *zone() { return mZone; }

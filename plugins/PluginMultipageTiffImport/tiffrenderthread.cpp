@@ -7,14 +7,16 @@
 
 #define IMAGE_EXT "tiff"
 
-TiffRenderThread::TiffRenderThread(const ImgRefList imgrefList, IntList indexes, int *incV, QMutex *incM, const QDir &tempDir) :
-    mImgRefList(imgrefList)
+TiffRenderThread::TiffRenderThread(const ImgRefList imgrefList, IntList indexes,
+                                   int *incV, QMutex *incM, const QDir &tempDir)
+    : mImgRefList(imgrefList),
+      mIncMutex(incM),
+      mIncValue(incV),
+      mDpi(0),
+      mDir(tempDir),
+      stopped(false),
+      mIndexes(indexes)
 {
-    mIncMutex = incM;
-    mIncValue = incV;
-    mDir = tempDir;
-    stopped = false;
-    mIndexes = indexes;
 }
 
 void TiffRenderThread::run()
@@ -24,7 +26,6 @@ void TiffRenderThread::run()
 
     //suppose everything was ok till now
     bool errorsWereOccured = false;
-    Q_UNUSED(errorsWereOccured);
 
     //enumerating pages
     for (int i = 0; i < mImgRefList.count(); i++)
@@ -54,6 +55,8 @@ void TiffRenderThread::run()
         img->save_tiff(absoluteOutputFileName.toStdString().c_str());
         mProcessedFiles.append(absoluteOutputFileName);
     }
+
+    Q_UNUSED(errorsWereOccured);
 
     //
     stopped = false;

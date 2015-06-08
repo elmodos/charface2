@@ -1,7 +1,7 @@
 #ifndef MYPLUGIN_H
 #define MYPLUGIN_H
 
-#include "../charface/cfplugin.h"
+#include "../../charface/cfplugin.h"
 
 class CFPluginSimpleImport : public CFPluginImport
 {

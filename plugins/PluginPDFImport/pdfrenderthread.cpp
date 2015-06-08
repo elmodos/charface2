@@ -8,7 +8,9 @@
 
 #define IMAGE_EXT "tiff"
 
-PDFRenderThread::PDFRenderThread(QString pdfFileName, IntList pageList, int *incV, QMutex *incM, const QDir &tempDir, int dpi)
+PDFRenderThread::PDFRenderThread(QString pdfFileName, IntList pageList, int *incV,
+                                 QMutex *incM, const QDir &tempDir, int dpi)
+    :
 {
     mPdfFileName = pdfFileName;
     mIncMutex = incM;
@@ -31,11 +33,10 @@ void PDFRenderThread::run()
 
     //document was not loaded
     if (!document)
-        return ;
+        return;
 
     //suppose everything was ok till now
     bool errorsWereOccured = false;
-    Q_UNUSED(errorsWereOccured);
 
     //enumerating pages
     for (int i = 0; i < mPageList.count(); i++)
@@ -82,6 +83,8 @@ void PDFRenderThread::run()
         //
         delete pdfPage;
     }
+
+    Q_UNUSED(errorsWereOccured);
 
     //
     delete document;
