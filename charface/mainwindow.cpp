@@ -9,7 +9,6 @@
 
 #include "utilities.h"
 #include "pluginmanager.h"
-#include "uimanager.h"
 #include "settingsmanager.h"
 #include "pagegraphicsscene.h"
 #include "mainwindow.h"
@@ -19,6 +18,7 @@
 #include "cfplugin.h"
 #include "pagegraphicsscene.h"
 #include "pageitemwidget.h"
+#include "pluginswindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -102,7 +102,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::onPlugins()
 {
-    UIManager::instance()->showPluginsDialog();
+    showPluginsDialog();
 }
 
 void MainWindow::onLoadDir()
@@ -187,6 +187,12 @@ bool MainWindow::askToSaveBatchIsOk()
         }
     }
     return ok;
+}
+
+void MainWindow::showPluginsDialog()
+{
+    PluginsWindow window;
+    window.exec();
 }
 
 void MainWindow::setPageScale(qreal scale)

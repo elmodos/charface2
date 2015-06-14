@@ -18,7 +18,6 @@ SOURCES += \
     settingsmanager.cpp \
     zone.cpp \
     utilities.cpp \
-    uimanager.cpp \
     numbersegment.cpp \
     progressdialog.cpp \
     pagegraphicsscene.cpp \
@@ -39,7 +38,6 @@ HEADERS += \
     zone.h \
     utilities.h \
     cfplugin.h \
-    uimanager.h \
     numbersegment.h \
     progressdialog.h \
     pagegraphicsscene.h \

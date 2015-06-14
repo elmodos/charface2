@@ -87,6 +87,9 @@ private:
     bool askToSaveBatchIsOk();
 
     //
+    void showPluginsDialog();
+
+    //
     Ui::MainWindow *ui;
 
     //

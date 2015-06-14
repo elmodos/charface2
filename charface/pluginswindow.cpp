@@ -5,9 +5,9 @@
 
 #include "pluginmanager.h"
 #include "applicationmanager.h"
-#include "uimanager.h"
 #include "pluginswindow.h"
 #include "ui_pluginswindow.h"
+#include "pluginaboutdialog.h"
 
 PluginsWindow::PluginsWindow(QWidget *parent) :
     QDialog(parent),
@@ -89,7 +89,13 @@ void PluginsWindow::onAboutPlugin()
     if (aboutDialog)
         aboutDialog->exec();
     else
-        UIManager::instance()->showPluginAboutDialog(plugin);
+        showPluginAboutDialog(plugin);
+}
+
+void PluginsWindow::showPluginAboutDialog(CFPlugin *plugin)
+{
+    PluginAboutDialog dialog(plugin);
+    dialog.exec();
 }
 
 void PluginsWindow::showPluginsList()

@@ -7,6 +7,8 @@ namespace Ui {
 class PluginsWindow;
 }
 
+class CFPlugin;
+
 class PluginsWindow : public QDialog
 {
     Q_OBJECT
@@ -22,6 +24,8 @@ private slots:
     void showPluginsList();
 
 private:
+    void showPluginAboutDialog(CFPlugin *plugin);
+
     Ui::PluginsWindow *ui;
 };
 

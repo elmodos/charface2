@@ -3,8 +3,8 @@
 //managers
 #include "applicationmanager.h"
 #include "pluginmanager.h"
-#include "uimanager.h"
 #include "settingsmanager.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -23,12 +23,12 @@ int main(int argc, char *argv[])
 
     PluginManager::instance()->loadPluginsFromDir("/home/elmodos/Desktop/build/plugins");
 
-    UIManager::createInstance();
-    UIManager::instance()->showMainWindow();
+    // Show main window
+    MainWindow *mainWindow = new MainWindow();
+    mainWindow->show();
 
     int retVal = app.exec();
 
-    UIManager::destroyInstance();
     PluginManager::destroyInstance();
     SettingsManager::destroyInstance();
     ApplicationManager::destroyInstance();

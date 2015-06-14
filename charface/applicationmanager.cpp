@@ -7,7 +7,6 @@
 #include "progressdialog.h"
 #include "pluginmanager.h"
 #include "settingsmanager.h"
-#include "uimanager.h"
 #include "batch.h"
 
 ApplicationManager * ApplicationManager::mInstance = NULL;
