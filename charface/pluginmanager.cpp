@@ -88,7 +88,7 @@ bool PluginManager::registerPlugin(const QString &filePath)
     }
     else
     {
-        CFPlugin *pluginInstance = dynamic_cast<CFPlugin*>(plugin);
+        CFPlugin *pluginInstance = qobject_cast<CFPlugin*>(plugin);
 
         //plugin is CFPlugin instance
         if (pluginInstance)
@@ -115,7 +115,7 @@ bool PluginManager::registerPluginsFromDirectory(const QString &dirPath)
 
     //filter
     QStringList filters;
-    filters << "*.so" << "*.dll";
+    filters << "*.so" << "*.dll" << "*.dylib";
     dir.setNameFilters(filters);
 
     dir.setFilter(QDir::Files | QDir::Readable);
@@ -130,7 +130,7 @@ bool PluginManager::registerPluginsFromDirectory(const QString &dirPath)
     foreach(QString fileName, files)
     {
         QString fullName = dir.filePath(fileName);
-        qDebug() << fullName;
+        qDebug() << "Full plugin path" << fullName;
         pluginsChanged = pluginsChanged || registerPlugin(fullName);
     }
 
@@ -159,9 +159,9 @@ void PluginManager::loadPluginsFromDir(const QString &dir)
     // load each plugin
     foreach(QString name, list)
     {
-        emit pluginIsBeingLoadedFromFile(name);
         qDebug() << "Loading plugin" << name;
         PluginManager::instance()->registerPlugin( pluginsDir.filePath(name) );
+        emit pluginIsBeingLoadedFromFile(name);
     }
 }
 

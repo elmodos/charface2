@@ -3,8 +3,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QFileDialog>
 
-Q_EXPORT_PLUGIN2(CFPluginSimpleImport, CFPluginSimpleImport);
-
 CFPluginSimpleImport::CFPluginSimpleImport()
 {
     qDebug("CFSimpleImportPlugin Instance created");

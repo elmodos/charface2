@@ -30,9 +30,10 @@ class Zone;
 typedef QList<Zone> ZoneList;
 
 //
-class CFPlugin : public QObject
+class CFPlugin: public QObject
 {
     Q_OBJECT
+
 public:
     static const QString pluginTypeToSting(const PluginType pt)
     {
@@ -48,6 +49,9 @@ public:
             default:return "Unknown";
         }
     }
+
+    //
+    virtual ~CFPlugin() {}
 
     // Supported actions by this plugin
     virtual PluginType pluginType() const = 0;
@@ -78,6 +82,7 @@ public:
 class CFPluginImport : public CFPlugin
 {
     Q_OBJECT
+
 public:
 
     //plugin type
@@ -91,6 +96,7 @@ public:
 class CFPluginAnalyze : public CFPlugin
 {
     Q_OBJECT
+
 public:
 
     //plugin type
@@ -107,6 +113,7 @@ public:
 class CFPluginOCR : public CFPlugin
 {
     Q_OBJECT
+
 public:
 
     //plugin type
@@ -122,6 +129,7 @@ public:
 class CFPluginImageEdit : public CFPlugin
 {
     Q_OBJECT
+
 public:
 
     //plugin type
@@ -148,6 +156,7 @@ protected:
 class CFPluginTextPostprocessing : public CFPlugin
 {
     Q_OBJECT
+
 public:
 
     //plugin type
@@ -158,8 +167,7 @@ public:
 
 };
 
-Q_DECLARE_METATYPE(CFPlugin*)
-
-Q_DECLARE_INTERFACE(CFPlugin, "charface.plugin/1.0");
+#define CharfacePluginIID "charface.plugin"
+Q_DECLARE_INTERFACE(CFPlugin, CharfacePluginIID)
 
 #endif // CFPLUGIN_H

@@ -1,12 +1,13 @@
 #ifndef MYPLUGIN_H
 #define MYPLUGIN_H
 
-#include "../../charface/cfplugin.h"
+#include <cfplugin.h>
 
 class CFPluginSimpleImport : public CFPluginImport
 {
     Q_OBJECT
     Q_INTERFACES(CFPlugin)
+    Q_PLUGIN_METADATA(IID CharfacePluginIID)
 
 public:
     CFPluginSimpleImport();
@@ -22,7 +23,7 @@ public:
 
     QIcon icon() const { return QIcon::fromTheme("application-install"); }
 
-    QString actionTitle() const { return "Import files with plugin"; }
+    QString actionTitle() const { return QString("Import files with plugin %1").arg(name()); }
 
     QStringList doImportFiles(const QString &tempDir = QString());
 

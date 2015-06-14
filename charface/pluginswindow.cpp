@@ -44,7 +44,7 @@ void PluginsWindow::onLoadPlugin()
     QFileDialog dialog;
     dialog.setAcceptMode(QFileDialog::AcceptOpen);
     dialog.setFileMode(QFileDialog::AnyFile);
-    dialog.setNameFilter("*.so");
+    dialog.setNameFilter("*.dlyb");
 
     if (!dialog.exec()) return;
     QStringList list = dialog.selectedFiles();

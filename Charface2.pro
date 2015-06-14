@@ -3,7 +3,7 @@ TEMPLATE = subdirs
 SUBDIRS += \
     charface
     # TODO: Adopt plugins
-    # plugins/PluginDemoImport \
+    plugins/PluginDemoImport \
     # plugins/PluginCuneiformOCR \
     # plugins/PluginScan \
     # plugins/PluginColorEdit \

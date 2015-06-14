@@ -1,13 +1,10 @@
 TEMPLATE = lib
+QT += core gui widgets
 TARGET = cfPluginImportDemo
-CONFIG += plugin release
-VERSION = 0.0.1
+CONFIG += plugin debug
+VERSION = 0.0.0
 
-INSTALLS += target
+INCLUDEPATH += ../../charface
 
-HEADERS += \
-    myplugin.h \
-    ../charface/cfplugin.h
-
-SOURCES += \
-    myplugin.cpp \
+HEADERS += myplugin.h
+SOURCES += myplugin.cpp
