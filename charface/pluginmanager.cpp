@@ -6,10 +6,13 @@
 
 PluginManager * PluginManager::mInstance = NULL;
 
+//Q_DECLARE_METATYPE(CFPluginInterface)
+
 PluginManager::PluginManager()
 {
+    // TODO: CFPlugin is not a QObject any more
     //make CFPlugin* visible for QVariant::fromValue()
-    qRegisterMetaType<CFPlugin*>();
+    //qRegisterMetaType<CFPluginInterface *>();
 
     //this value will be set to false while adding a batch of plugins
     mEmitPluginsChangedSignal = true;
@@ -23,31 +26,44 @@ PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::addPLugin(CFPlugin *plugin)
+void PluginManager::addPLugin(CFPluginInterface *plugin)
 {
     // take care of this baby
-    plugin->setParent(this);
-
-    // categorize
-    PluginType pluginType = plugin->pluginType();
-    qDebug() << "Adding plugin instance, type" << CFPlugin::pluginTypeToSting(pluginType) << "\n";
+    QObject *pluginObject = dynamic_cast<QObject *>(plugin);
+    if (pluginObject)
+    {
+        pluginObject->setParent(this);
+    }
 
     //store
-    mPluginsMap.insert(PT_All, plugin);
-    mPluginsMap.insert(pluginType, plugin);
+    void *pointer = static_cast<void *>(plugin);
+    mPluginsMap.insert(PT_All, pointer);
+
+    // categorize
+    for (int i = PT_All + 1; i < PT_Count; i++)
+    {
+        PluginType pluginType = (PluginType)i;
+        if (plugin->isPluginTypeSupported(pluginType))
+        {
+            qDebug() << "Adding plugin instance, type" << cfPluginTypeToSting(pluginType) << "\n";
+            mPluginsMap.insert(pluginType, pointer);
+        }
+    }
 
     //set default OCR plugin if it is not set
     if (!mDefaultOCRPlugin)
     {
-        CFPluginOCR *pluginOCR = dynamic_cast<CFPluginOCR*>(plugin);
-        if (pluginOCR) setDefaultOCRPlugin(pluginOCR);
+        CFPluginOCRInterface *pluginOCR = dynamic_cast<CFPluginOCRInterface *>(plugin);
+        if (pluginOCR)
+            setDefaultOCRPlugin(pluginOCR);
     }
 
     //set default Analyze plugin if it is not set
     if (!mDefaultAnalyzePlugin)
     {
-        CFPluginAnalyze *pluginAnalyze = dynamic_cast<CFPluginAnalyze*>(plugin);
-        if (pluginAnalyze) setDefaultAnalyzePlugin(pluginAnalyze);
+        CFPluginAnalyzeInterface *pluginAnalyze = dynamic_cast<CFPluginAnalyzeInterface *>(plugin);
+        if (pluginAnalyze)
+            setDefaultAnalyzePlugin(pluginAnalyze);
     }
 
 }
@@ -88,7 +104,7 @@ bool PluginManager::registerPlugin(const QString &filePath)
     }
     else
     {
-        CFPlugin *pluginInstance = qobject_cast<CFPlugin*>(plugin);
+        CFPluginInterface *pluginInstance = dynamic_cast<CFPluginInterface *>(plugin);
 
         //plugin is CFPlugin instance
         if (pluginInstance)
@@ -145,7 +161,18 @@ bool PluginManager::registerPluginsFromDirectory(const QString &dirPath)
 
 PluginsList PluginManager::plugins(PluginType pt) const
 {
-    return mPluginsMap.values(pt);
+    // TODO: speed up later
+    PluginsList result;
+    foreach (void *pointer, mPluginsMap.values(pt))
+    {
+        auto pluginPointer = static_cast<CFPluginInterface *>(pointer);
+        if (pluginPointer)
+        {
+            result.append(pluginPointer);
+        }
+    }
+
+    return result;
 }
 
 void PluginManager::loadPluginsFromDir(const QString &dir)

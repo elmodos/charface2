@@ -5,16 +5,17 @@
 #include <QList>
 #include <QMultiMap>
 
-#include "cfplugin.h"
+#include "cfplugininterface.h"
 
 #define pluginManager (PluginManager::instance())
 
-typedef QList<CFPlugin*> PluginsList;
-typedef QMultiMap<PluginType, CFPlugin*> PluginsMap;
+typedef QList<CFPluginInterface *> PluginsList;
+typedef QMultiMap<PluginType, void *> PluginsMap; //TODO: I had trobles with adding pure virual with metatype
 
 class PluginManager : public QObject
 {
     Q_OBJECT
+
 public:
     static void createInstance();
     static void destroyInstance();
@@ -24,11 +25,11 @@ public:
     bool registerPluginsFromDirectory(const QString &dirPath);
     PluginsList plugins(PluginType pt = PT_All) const;
 
-    CFPluginOCR *defaultOCRPlugin() { return mDefaultOCRPlugin;}
-    void setDefaultOCRPlugin(CFPluginOCR *plugin) { mDefaultOCRPlugin = plugin; }
+    CFPluginOCRInterface *defaultOCRPlugin() { return mDefaultOCRPlugin;}
+    void setDefaultOCRPlugin(CFPluginOCRInterface *plugin) { mDefaultOCRPlugin = plugin; }
 
-    CFPluginAnalyze *defaultAnalyzePlugin() { return mDefaultAnalyzePlugin;}
-    void setDefaultAnalyzePlugin(CFPluginAnalyze *plugin) { mDefaultAnalyzePlugin = plugin; }
+    CFPluginAnalyzeInterface *defaultAnalyzePlugin() { return mDefaultAnalyzePlugin;}
+    void setDefaultAnalyzePlugin(CFPluginAnalyzeInterface *plugin) { mDefaultAnalyzePlugin = plugin; }
 
     void loadPluginsFromDir(const QString &dir);
 
@@ -41,13 +42,13 @@ private:
     PluginManager();
     ~PluginManager();
 
-    void addPLugin(CFPlugin *plugin);
+    void addPLugin(CFPluginInterface *plugin);
     PluginsMap mPluginsMap;
 
     bool mEmitPluginsChangedSignal;
 
-    CFPluginOCR *mDefaultOCRPlugin;
-    CFPluginAnalyze *mDefaultAnalyzePlugin;
+    CFPluginOCRInterface *mDefaultOCRPlugin;
+    CFPluginAnalyzeInterface *mDefaultAnalyzePlugin;
 };
 
 #endif // PLUGINMANAGER_H

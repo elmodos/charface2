@@ -51,7 +51,8 @@ public:
     }
 
     //
-    virtual ~CFPlugin() {}
+    //CFPlugin() {}
+    //virtual ~CFPlugin() = 0;//{}
 
     // Supported actions by this plugin
     virtual PluginType pluginType() const = 0;
@@ -69,13 +70,13 @@ public:
     virtual QString author() const = 0;
 
     //if aboutDialog() returns NULL standard dialog will be used with pluginDescription()
-    virtual QDialog *aboutDialog() { return NULL; }
+    virtual QDialog *aboutDialog() = 0;
 
     //Icon for menu entry, toolbar, etc
-    virtual QIcon icon() const { return QIcon(); }
+    virtual QIcon icon() const = 0;// { return QIcon(); }
 
     //Action text
-    virtual QString actionTitle() const { return name(); }
+    virtual QString actionTitle() const = 0;// { return name(); }
 };
 
 
@@ -86,7 +87,7 @@ class CFPluginImport : public CFPlugin
 public:
 
     //plugin type
-    PluginType pluginType() const { return PT_Import; }
+    virtual PluginType pluginType() const = 0;// { return PT_Import; }
 
     //store files list and return paths, files in temp dir fill be deleted automatically
     virtual QStringList doImportFiles(const QString &tempDir) = 0;
@@ -106,7 +107,7 @@ public:
     virtual bool doAnalyze(QImage &img, ZoneList &result) = 0;
 
     //
-    virtual void showSettingsDialog() { /*Do nothing if plugin is not customizable*/ }
+    void showSettingsDialog() { /*Do nothing if plugin is not customizable*/ }
 };
 
 
@@ -123,7 +124,7 @@ public:
     virtual bool doOCR(QImage &img, QString &result) = 0;
 
     //
-    virtual void showSettingsDialog() { /*Do nothing if plugin is not customizable*/ }
+    void showSettingsDialog() { /*Do nothing if plugin is not customizable*/ }
 };
 
 class CFPluginImageEdit : public CFPlugin

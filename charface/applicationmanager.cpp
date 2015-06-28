@@ -151,7 +151,7 @@ void ApplicationManager::readPages(const IntList &indexes)
     QApplication::instance()->processEvents();
 
     QImage *img = new QImage( page->fileNameAbsolute() );
-    CFPluginOCR *plugin = pluginManager->defaultOCRPlugin();
+    CFPluginOCRInterface *plugin = pluginManager->defaultOCRPlugin();
 
     if (zonesCount)
     {
@@ -224,7 +224,7 @@ void ApplicationManager::analyzePages(const IntList &indexes)
 void ApplicationManager::analyzePagesBackground(const IntList &indexes)
 {
     //get plugin for this job
-    CFPluginAnalyze *plugin = pluginManager->defaultAnalyzePlugin();
+    CFPluginAnalyzeInterface *plugin = pluginManager->defaultAnalyzePlugin();
 
     //run
     int count = indexes.size();

@@ -1,8 +1,8 @@
 #include "pluginaboutdialog.h"
-#include "cfplugin.h"
+#include "cfplugininterface.h"
 #include "ui_pluginaboutdialog.h"
 
-PluginAboutDialog::PluginAboutDialog(CFPlugin *plugin) :
+PluginAboutDialog::PluginAboutDialog(CFPluginInterface *plugin) :
     QDialog(0),
     ui(new Ui::PluginAboutDialog)
 {

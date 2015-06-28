@@ -3,7 +3,7 @@
 
 #include <QDialog>
 
-class CFPlugin;
+class CFPluginInterface;
 
 namespace Ui {
 class PluginAboutDialog;
@@ -14,7 +14,7 @@ class PluginAboutDialog : public QDialog
     Q_OBJECT
     
 public:
-    explicit PluginAboutDialog(CFPlugin *plugin);
+    explicit PluginAboutDialog(CFPluginInterface *plugin);
     ~PluginAboutDialog();
     int exec();
     void show();

@@ -5,7 +5,7 @@
 #include <QLabel>
 
 #include "pagelistview.h"
-#include "cfplugin.h"
+#include "cfplugininterface.h"
 #include "zone.h"
 
 class PageGraphicsScene;
@@ -81,7 +81,7 @@ private:
     void setupDropDownPluginsMenu(PluginType pluginType, QMenu *menu);
 
     //
-    void execPluginActionImport(CFPlugin *plugin);
+    void execPluginActionImport(CFPluginInterface *plugin);
 
     //
     bool askToSaveBatchIsOk();

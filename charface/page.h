@@ -5,7 +5,7 @@
 #include <QList>
 #include <QIcon>
 
-#include "cfplugin.h"
+#include "cfplugininterface.h"
 #include "zone.h"
 
 class Batch;

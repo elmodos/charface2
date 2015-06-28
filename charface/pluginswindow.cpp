@@ -29,7 +29,7 @@ PluginsWindow::PluginsWindow(QWidget *parent) :
     ui->comboBoxPluginTypes->clear();
     for (int pt = PT_All; pt < PT_Count; pt++)
     {
-        QString str = CFPlugin::pluginTypeToSting((PluginType)pt);
+        QString str = cfPluginTypeToSting((PluginType)pt);
         ui->comboBoxPluginTypes->addItem(str);
     }
 }
@@ -82,7 +82,7 @@ void PluginsWindow::onAboutPlugin()
     if (currentIndex < 0 || currentIndex >= plugins.size())
         return;
 
-    CFPlugin *plugin = plugins[ui->tableWidget->currentRow()];
+    CFPluginInterface *plugin = plugins[ui->tableWidget->currentRow()];
 
     //get inner about dialog
     QDialog *aboutDialog = plugin->aboutDialog();
@@ -92,7 +92,7 @@ void PluginsWindow::onAboutPlugin()
         showPluginAboutDialog(plugin);
 }
 
-void PluginsWindow::showPluginAboutDialog(CFPlugin *plugin)
+void PluginsWindow::showPluginAboutDialog(CFPluginInterface *plugin)
 {
     PluginAboutDialog dialog(plugin);
     dialog.exec();
@@ -121,7 +121,7 @@ void PluginsWindow::showPluginsList()
     //add entries
     for (int i = 0; i < plugins.size(); i++)
     {
-        CFPlugin *plugin = plugins[i];
+        CFPluginInterface *plugin = plugins[i];
 
         //name
         QTableWidgetItem *item = new QTableWidgetItem(plugin->icon(), plugin->name());

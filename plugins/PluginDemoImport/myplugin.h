@@ -1,17 +1,21 @@
 #ifndef MYPLUGIN_H
 #define MYPLUGIN_H
 
-#include <cfplugin.h>
+#include <cfplugininterface.h>
+#include <QtWidgets/QDialog>
 
-class CFPluginSimpleImport : public CFPluginImport
+class CFPluginSimpleImport : public QObject, public CFPluginImportInterface
 {
     Q_OBJECT
-    Q_INTERFACES(CFPlugin)
+    Q_INTERFACES(CFPluginInterface)
     Q_PLUGIN_METADATA(IID CharfacePluginIID)
 
 public:
     CFPluginSimpleImport();
     ~CFPluginSimpleImport();
+
+    // Supported actions by this plugin
+    bool isPluginTypeSupported(PluginType pluginType) const { return pluginType == PT_Import; }
 
     QString name() const { return "Demo Import plugin"; }
 
@@ -23,9 +27,11 @@ public:
 
     QIcon icon() const { return QIcon::fromTheme("application-install"); }
 
+    QDialog *aboutDialog() { return nullptr; }
+
     QString actionTitle() const { return QString("Import files with plugin %1").arg(name()); }
 
-    QStringList doImportFiles(const QString &tempDir = QString());
+    QStringList doImportFiles(const QString &tempDir);
 
 };
 

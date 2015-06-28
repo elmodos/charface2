@@ -15,7 +15,7 @@
 #include "applicationmanager.h"
 #include "ui_mainwindow.h"
 #include "batch.h"
-#include "cfplugin.h"
+#include "cfplugininterface.h"
 #include "pagegraphicsscene.h"
 #include "pageitemwidget.h"
 #include "pluginswindow.h"
@@ -273,55 +273,55 @@ void MainWindow::updatePluginDepent()
 
 void MainWindow::onPluginAction()
 {
-    QAction *act = qobject_cast<QAction*>( sender() );
-    CFPlugin *plugin = act->data().value<CFPlugin*>();
+//    QAction *act = qobject_cast<QAction*>( sender() );
+//    CFPluginInterface *plugin = act->data().value<CFPluginInterface *>();
 
-    //
-    if (!plugin)
-        return;
+//    //
+//    if (!plugin)
+//        return;
 
-    qDebug() << "onPluginAction";
+//    qDebug() << "onPluginAction";
 
     //get plugin type
-    PluginType type = plugin->pluginType();
+//    PluginType type = plugin->pluginType();
 
-    //
-    switch(type)
-    {
-        case PT_Import:
-            execPluginActionImport(plugin);
-            break;
+//    //
+//    switch(type)
+//    {
+//        case PT_Import:
+//            execPluginActionImport(plugin);
+//            break;
 
-        case PT_Analyze:
-        {
-            QAction *action = qobject_cast<QAction*>( sender() );
-            if (action)
-            {
-                CFPlugin *plugin = action->data().value<CFPlugin*>();
-                CFPluginAnalyze *pluginAnalyze = dynamic_cast<CFPluginAnalyze*>(plugin);
-                pluginManager->setDefaultAnalyzePlugin(pluginAnalyze);
-                updateToolbar();
-            }
-            break;
-        }
+//        case PT_Analyze:
+//        {
+//            QAction *action = qobject_cast<QAction*>( sender() );
+//            if (action)
+//            {
+//                CFPlugin *plugin = action->data().value<CFPlugin*>();
+//                CFPluginAnalyze *pluginAnalyze = dynamic_cast<CFPluginAnalyze*>(plugin);
+//                pluginManager->setDefaultAnalyzePlugin(pluginAnalyze);
+//                updateToolbar();
+//            }
+//            break;
+//        }
 
-        case PT_OCR:
-        {
-            QAction *action = qobject_cast<QAction*>( sender() );
-            if (action)
-            {
-                CFPlugin *plugin = action->data().value<CFPlugin*>();
-                CFPluginOCR *pluginOCR = dynamic_cast<CFPluginOCR*>(plugin);
-                pluginManager->setDefaultOCRPlugin(pluginOCR);
-                updateToolbar();
-            }
-            break;
-        }
+//        case PT_OCR:
+//        {
+//            QAction *action = qobject_cast<QAction*>( sender() );
+//            if (action)
+//            {
+//                CFPlugin *plugin = action->data().value<CFPlugin*>();
+//                CFPluginOCR *pluginOCR = dynamic_cast<CFPluginOCR*>(plugin);
+//                pluginManager->setDefaultOCRPlugin(pluginOCR);
+//                updateToolbar();
+//            }
+//            break;
+//        }
 
-        default:
-            qDebug() << "WARN: Some plugin action arrived, ignoring";
-            break;
-    }
+//        default:
+//            qDebug() << "WARN: Some plugin action arrived, ignoring";
+//            break;
+//    }
 }
 
 void MainWindow::onPluginEditImageChanged(int index)
@@ -334,9 +334,9 @@ void MainWindow::onPluginEditImageChanged(int index)
 
     if (index >= 0 && index < plugins.size() )
     {
-        CFPlugin *pl = plugins.at(index);
+        CFPluginInterface *pl = plugins.at(index);
 
-        CFPluginImageEdit *plugin = dynamic_cast<CFPluginImageEdit*>(pl);
+        CFPluginImageEditInterface *plugin = dynamic_cast<CFPluginImageEditInterface *>(pl);
         if(plugin)
         {
             //
@@ -731,9 +731,9 @@ void MainWindow::updateImageEditPluginsStackWidget()
     PluginsList plugins = pluginManager->plugins(PT_ImageEdit);
 
     //
-    foreach (CFPlugin *pl, plugins)
+    foreach (CFPluginInterface *pl, plugins)
     {
-        CFPluginImageEdit *plugin = dynamic_cast<CFPluginImageEdit*>(pl);
+        CFPluginImageEditInterface *plugin = dynamic_cast<CFPluginImageEditInterface *>(pl);
         if(plugin)
             toolBox->addItem(plugin->createWidgetTool(), plugin->icon(), plugin->name());
     }
@@ -833,10 +833,10 @@ void MainWindow::addImportActions()
     //add import plugins
     QAction *customAction;
     PluginsList list = PluginManager::instance()->plugins( PT_Import );
-    foreach (CFPlugin* plugin, list)
+    foreach (CFPluginInterface* plugin, list)
     {
         customAction = new QAction(plugin->icon(), plugin->actionTitle(), menu);
-        customAction->setData(QVariant::fromValue(plugin));
+        customAction->setData(QVariant::fromValue(static_cast<void *>(plugin)));
 
         //
         connect( customAction, SIGNAL(triggered()), this, SLOT(onPluginAction()));
@@ -890,12 +890,12 @@ void MainWindow::addExportActions()
     QAction *customAction;
     PluginsList list = PluginManager::instance()->plugins( PT_Export );
 
-    foreach (CFPlugin* plugin, list)
+    foreach (CFPluginInterface *plugin, list)
     {
         customAction = new QAction(plugin->icon(), plugin->actionTitle(), menu);
-        customAction->setData( QVariant::fromValue(plugin) );
+        customAction->setData( QVariant::fromValue(static_cast<void *>(plugin)) );
         //handle triggered(CFPlugin*) with onPluginAction(CFPlugin*)
-        connect( customAction, SIGNAL(triggered(CFPlugin*)), this, SLOT(onPluginAction(CFPlugin*)));
+        connect( customAction, SIGNAL(triggered(CFPluginInterface *)), this, SLOT(onPluginAction(CFPluginInterface *)));
 
         menu->addAction(customAction);
     }
@@ -963,7 +963,7 @@ void MainWindow::setupDropDownPluginsMenu(PluginType pluginType, QMenu *menu)
     if (list.size())
     {
         //plugin with checkmark
-        CFPlugin *defaultPlugin = NULL;
+        CFPluginInterface *defaultPlugin = NULL;
 
         //Leading actions
         {
@@ -999,10 +999,10 @@ void MainWindow::setupDropDownPluginsMenu(PluginType pluginType, QMenu *menu)
         }
 
         // add plugins list
-        foreach (CFPlugin* plugin, list)
+        foreach (CFPluginInterface *plugin, list)
         {
             customAction = new QAction(plugin->icon(), plugin->actionTitle(), menu);
-            customAction->setData( QVariant::fromValue(plugin) );
+            customAction->setData( QVariant::fromValue(static_cast<void *>(plugin)) );
             customAction->setCheckable(true);
             customAction->setChecked( defaultPlugin == plugin);
 
@@ -1028,12 +1028,12 @@ void MainWindow::setupDropDownPluginsMenu(PluginType pluginType, QMenu *menu)
 
 }
 
-void MainWindow::execPluginActionImport(CFPlugin *plugin)
+void MainWindow::execPluginActionImport(CFPluginInterface *plugin)
 {
     qDebug() << "import plugin";
 
     //cast
-    CFPluginImport *pluginImport = dynamic_cast<CFPluginImport*>(plugin);
+    CFPluginImportInterface *pluginImport = dynamic_cast<CFPluginImportInterface *>(plugin);
 
     //use
     if(pluginImport)

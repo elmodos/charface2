@@ -37,7 +37,6 @@ HEADERS += \
     settingsmanager.h \
     zone.h \
     utilities.h \
-    cfplugin.h \
     numbersegment.h \
     progressdialog.h \
     pagegraphicsscene.h \
@@ -45,7 +44,8 @@ HEADERS += \
     pagelistview.h \
     pageitemwidget.h \
     typedefs.h \
-    pagegraphicsview.h
+    pagegraphicsview.h \
+    cfplugininterface.h
 
 FORMS += \
     mainwindow.ui \
