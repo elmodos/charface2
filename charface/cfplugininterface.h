@@ -26,7 +26,7 @@ enum
 typedef int PluginType;
 
 namespace {
-inline const QString cfPluginTypeToSting(const PluginType pt)
+inline const QString cfPluginTypeToString(const PluginType pt)
 {
     switch(pt)
     {

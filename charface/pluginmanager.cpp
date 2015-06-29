@@ -45,7 +45,7 @@ void PluginManager::addPLugin(CFPluginInterface *plugin)
         PluginType pluginType = (PluginType)i;
         if (plugin->isPluginTypeSupported(pluginType))
         {
-            qDebug() << "Adding plugin instance, type" << cfPluginTypeToSting(pluginType) << "\n";
+            qDebug() << "Adding plugin instance, type" << cfPluginTypeToString(pluginType) << "\n";
             mPluginsMap.insert(pluginType, pointer);
         }
     }

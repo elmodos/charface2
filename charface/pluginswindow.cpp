@@ -29,7 +29,7 @@ PluginsWindow::PluginsWindow(QWidget *parent) :
     ui->comboBoxPluginTypes->clear();
     for (int pt = PT_All; pt < PT_Count; pt++)
     {
-        QString str = cfPluginTypeToSting((PluginType)pt);
+        QString str = cfPluginTypeToString((PluginType)pt);
         ui->comboBoxPluginTypes->addItem(str);
     }
 }
