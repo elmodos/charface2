@@ -6,6 +6,16 @@ TEMPLATE = app
 
 # INCLUDEPATH +=
 
+unix:!macx { # Linux
+    CONFIG += c++11
+}
+
+macx: {
+    LIBS += -stdlib=libc++
+    QMAKE_CXXFLAGS += -stdlib=libc++
+    QMAKE_CXXFLAGS += -std=c++11
+}
+
 SOURCES += \
     main.cpp \
     applicationmanager.cpp \

@@ -9,7 +9,12 @@ INCLUDEPATH += ../../charface
 HEADERS += myplugin.h
 SOURCES += myplugin.cpp
 
-LIBS += -stdlib=libc++
+unix:!macx { # Linux
+    CONFIG += c++11
+}
 
-QMAKE_CXXFLAGS += -stdlib=libc++
-QMAKE_CXXFLAGS += -std=c++11
+macx: {
+    LIBS += -stdlib=libc++
+    QMAKE_CXXFLAGS += -stdlib=libc++
+    QMAKE_CXXFLAGS += -std=c++11
+}

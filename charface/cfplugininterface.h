@@ -25,21 +25,22 @@ enum
 };
 typedef int PluginType;
 
- static const QString cfPluginTypeToSting(const PluginType pt)
- {
-     switch(pt)
-     {
-         case PT_All:return "All plugins";
-         case PT_Import:return "Import plugins";
-         case PT_ImageEdit:return "Image manipulation plugins";
-         case PT_Analyze:return "Image structure analyzing plugins";
-         case PT_OCR:return "OCR plugins";
-         case PT_TextPostprocessing:return "Text postprocessing plugins";
-         case PT_Export:return "Export plugins";
-         default:return "Unknown";
-     }
- }
-
+namespace {
+inline const QString cfPluginTypeToSting(const PluginType pt)
+{
+    switch(pt)
+    {
+    case PT_All: return QString("All plugins");
+    case PT_Import: return QString("Import plugins");
+    case PT_ImageEdit: return QString("Image manipulation plugins");
+    case PT_Analyze: return QString("Image structure analyzing plugins");
+    case PT_OCR: return QString("OCR plugins");
+    case PT_TextPostprocessing: return QString("Text postprocessing plugins");
+    case PT_Export: return QString("Export plugins");
+    default: return QString("Unknown");
+    }
+}
+}
 
 class Zone;
 typedef QList<Zone> ZoneList;
@@ -83,10 +84,9 @@ Q_DECLARE_INTERFACE(CFPluginInterface, CharfacePluginIID)
 class CFPluginImportInterface : public CFPluginInterface
 {
 public:
-	
+
     //store files list and return paths, files in temp dir fill be deleted automatically
     virtual QStringList doImportFiles(const QString &tempDir) = 0;
-
 };
 
 class CFPluginAnalyzeInterface : public CFPluginInterface
@@ -112,12 +112,12 @@ public:
     virtual void showSettingsDialog() = 0;
 };
 
- class CFPluginImageEditInterface : public CFPluginInterface
- {
- public:
+class CFPluginImageEditInterface : public CFPluginInterface
+{
+public:
 
     //
-    virtual void setPaths(const QString &imageFile, const QString &tempDir = QString()) = 0; // { mImageFile = imageFile; mTempDir = tempDir; }
+    virtual void setPaths(const QString &imageFile, const QString &tempDir = QString()) = 0;
 
     //widget for central area
     virtual QWidget *createWidgetInteraction() = 0;
@@ -130,14 +130,12 @@ public:
 };
 
 
- class CFPluginTextPostprocessingInterface : public CFPluginInterface
- {
- public:
+class CFPluginTextPostprocessingInterface : public CFPluginInterface
+{
+public:
 
-     //return new string, use some interaction e.g. spell check
-     virtual QString doTextPostprocessing(const QString &text) = 0;
-
- };
-
+    //return new string, use some interaction e.g. spell check
+    virtual QString doTextPostprocessing(const QString &text) = 0;
+};
 
 #endif // CFPLUGININTERFACE_H
