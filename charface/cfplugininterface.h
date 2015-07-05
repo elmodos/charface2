@@ -25,26 +25,8 @@ enum
 };
 typedef int PluginType;
 
-namespace {
-inline const QString cfPluginTypeToString(const PluginType pt)
-{
-    switch(pt)
-    {
-    case PT_All: return QString("All plugins");
-    case PT_Import: return QString("Import plugins");
-    case PT_ImageEdit: return QString("Image manipulation plugins");
-    case PT_Analyze: return QString("Image structure analyzing plugins");
-    case PT_OCR: return QString("OCR plugins");
-    case PT_TextPostprocessing: return QString("Text postprocessing plugins");
-    case PT_Export: return QString("Export plugins");
-    default: return QString("Unknown");
-    }
-}
-}
-
 class Zone;
 typedef QList<Zone> ZoneList;
-
 
 //
 class CFPluginInterface

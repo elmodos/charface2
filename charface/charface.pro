@@ -23,8 +23,7 @@ SOURCES += \
     mainwindow.cpp \
     pluginswindow.cpp \
     pluginaboutdialog.cpp \
-    batch.cpp \
-    page.cpp \
+    documentmodel.cpp \
     settingsmanager.cpp \
     zone.cpp \
     utilities.cpp \
@@ -34,7 +33,8 @@ SOURCES += \
     zonerectitem.cpp \
     pagelistview.cpp \
     pageitemwidget.cpp \
-    pagegraphicsview.cpp
+    pagegraphicsview.cpp \
+    pagemodel.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -42,8 +42,7 @@ HEADERS += \
     pluginmanager.h \
     pluginswindow.h \
     pluginaboutdialog.h \
-    batch.h \
-    page.h \
+    documentmodel.h \
     settingsmanager.h \
     zone.h \
     utilities.h \
@@ -55,7 +54,8 @@ HEADERS += \
     pageitemwidget.h \
     typedefs.h \
     pagegraphicsview.h \
-    cfplugininterface.h
+    cfplugininterface.h \
+    pagemodel.h
 
 FORMS += \
     mainwindow.ui \

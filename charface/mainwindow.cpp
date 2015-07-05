@@ -14,15 +14,16 @@
 #include "mainwindow.h"
 #include "applicationmanager.h"
 #include "ui_mainwindow.h"
-#include "batch.h"
+#include "documentmodel.h"
 #include "cfplugininterface.h"
 #include "pagegraphicsscene.h"
 #include "pageitemwidget.h"
 #include "pluginswindow.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    mDocument(&document)
 {
     //
     ui->setupUi(this);
@@ -132,7 +133,7 @@ void MainWindow::onLoadDir()
 
     //
     //setEnabled(false);
-    appManager->addFilesToBatch(files, QString(), true);
+    appManager->addFilesToDocument(files, QString(), true);
     //setEnabled(true);
 
     //refresh ui
@@ -150,7 +151,7 @@ void MainWindow::onLoadFile()
     //
     QStringList files = dialog.selectedFiles();
     setEnabled(false);
-    appManager->addFilesToBatch(files, QString() ,true);
+    appManager->addFilesToDocument(files, QString() ,true);
     setEnabled(true);
 
     //refresh ui
@@ -163,11 +164,11 @@ bool MainWindow::askToSaveBatchIsOk()
     bool ok = true;
 
     //if not saved - show dialog
-    if( !appManager->batch()->isSaved() )
+    if( !mDocument->isSaved() )
     {
         //
         QMessageBox messageBox(QMessageBox::Question,"Not saved","Batch is not saved. Save it now?",QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        messageBox.setDetailedText(QString("Batch is stored at temporary location \"%1\"").arg(appManager->batch()->path()));
+        messageBox.setDetailedText(QString("Batch is stored at temporary location \"%1\"").arg(mDocument->path()));
         int answer = messageBox.exec();
 
         //
@@ -218,7 +219,7 @@ void MainWindow::setPageScale(qreal scale)
 bool MainWindow::onBatchNew()
 {
     if (askToSaveBatchIsOk())
-        return appManager->batchNew();
+        return appManager->documentNew();
 
     return false;
 }
@@ -233,7 +234,7 @@ bool MainWindow::onBatchOpen()
 
         if (!dialog.exec()) return false;
 
-        return appManager->batchOpen(dialog.directory().absolutePath());
+        return appManager->documentOpen(dialog.directory().absolutePath());
     }
 
     return false;
@@ -250,7 +251,7 @@ bool MainWindow::onBatchSaveAs()
     if (!dialog.exec()) return false;
 
     //
-    return appManager->batchSaveAs(dialog.directory().absolutePath());
+    return appManager->documentSaveAs(dialog.directory().absolutePath());
 }
 
 void MainWindow::onEditImage(bool down)
@@ -383,13 +384,13 @@ void MainWindow::onPluginEditImageChanged(int index)
 
 void MainWindow::onPageListSelectionChanged(int index)
 {
-    if (!appManager->batch())
+    if (!mDocument)
         return;
 
     //a hack
     mPageView->loadPage(NULL);
 
-    if (index < 0 || index >= appManager->batch()->pages()->size())
+    if (index < 0 || index >= mDocument->pages()->size())
         return;
 
     QLabel *label = new QLabel(tr("Loading page..."),ui->graphicsPageView);
@@ -399,7 +400,7 @@ void MainWindow::onPageListSelectionChanged(int index)
     QApplication::instance()->processEvents();
 
     //
-    mPageView->loadPage(appManager->batch()->pages()->at(index));
+    mPageView->loadPage(mDocument->pages()->at(index));
     delete label;
 
     //resize
@@ -417,10 +418,7 @@ void MainWindow::onPageListSelectionChanged(int index)
 
 void MainWindow::onPageViewChangedPage()
 {
-    Batch *batch = appManager->batch();
-    if (batch)
-        batch->saveXML();
-
+    mDocument->saveXML();
     updateStatusBar();
 }
 
@@ -522,11 +520,10 @@ void MainWindow::onPageListDelete()
     if (res != QMessageBox::Yes)
         return;
 
-    Batch *batch = appManager->batch();
     for (int i = selection.size() - 1; i >= 0; i--)
-        batch->deletePage( selection.at(i) );
+        mDocument->deletePage( selection.at(i) );
 
-    batch->saveXML();
+    mDocument->saveXML();
     updatePagesListWidget();
     onPageListSelectionChanged(-1);
 }
@@ -541,8 +538,7 @@ void MainWindow::onPageListMove()
 
     qDebug() << selection;
 
-    Batch *batch = appManager->batch();
-    PagesList *pages = batch->pages();
+    PagesList *pages = mDocument->pages();
 
     int newPos = 0;
     IntList newSelection;
@@ -575,7 +571,7 @@ void MainWindow::onPageListMove()
             newSelection.append(newPos - i);
     }
 
-    batch->saveXML();
+    mDocument->saveXML();
     qDebug() << "new selection" << newSelection;
     mItemsListView->setSelection(newSelection);
 }
@@ -653,7 +649,7 @@ void MainWindow::onAnalyzeAll()
 
     //fill list
     IntList indexes;
-    int count = appManager->batch()->pages()->count();
+    int count = mDocument->pages()->count();
     for (int i = 0; i < count; i++)
         indexes.push_back(i);
 
@@ -760,13 +756,12 @@ void MainWindow::updateStatusBar()
     QString str;
 
     //batch
-    Batch *batch = appManager->batch();
-    if (batch) str = tr("%1 pages in batch").arg(batch->pages()->size());
+    if (mDocument) str = tr("%1 pages in batch").arg(mDocument->pages()->size());
     else str = tr("No batch loaded");
     mLabelBatchInfo->setText(str);
 
     //page
-    Page *page = mPageView->page();
+    PageModel *page = mPageView->page();
     if (page)
     {
         QString strRecognozed = (page->recognized() ? "yes" : "no");
@@ -1042,15 +1037,15 @@ void MainWindow::execPluginActionImport(CFPluginInterface *plugin)
         setEnabled(false);
 
         //clean temp dir
-        QString tempPath = appManager->batch()->tempPath(true);
-        appManager->batch()->removeAllFilesInDir(tempPath);
+        QString tempPath = mDocument->tempPath(true);
+        mDocument->removeAllFilesInDir(tempPath);
 
         //
         QStringList files = pluginImport->doImportFiles( tempPath );
-        appManager->addFilesToBatch(files, tempPath, true);
+        appManager->addFilesToDocument(files, tempPath, true);
 
         //clean temp dir and delete it
-        appManager->batch()->removeAllFilesInDir(tempPath);
+        mDocument->removeAllFilesInDir(tempPath);
         QDir().rmdir(tempPath);
 
         //
@@ -1069,16 +1064,11 @@ void MainWindow::show()
 
 int MainWindow::plvItemsCount()
 {
-    Batch *batch = appManager->batch();
-
-    if (batch)
-        return batch->pages()->size();
-    else
-        return 0;
+    return mDocument->pages()->size();
 }
 
 void MainWindow::plvSetupItem(int index, PageItemWidgetRef itemWidget)
 {
     itemWidget->setTitle( QString("Page %1").arg(index + 1) );
-    itemWidget->setPixmap( appManager->batch()->pages()->at(index)->thumb() );
+    itemWidget->setPixmap( mDocument->pages()->at(index)->thumb() );
 }

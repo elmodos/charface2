@@ -7,7 +7,7 @@
 #include <QGraphicsView>
 
 #include "zone.h"
-#include "page.h"
+#include "pagemodel.h"
 #include "zonerectitem.h"
 #include "settingsmanager.h"
 #include "pagegraphicsview.h"

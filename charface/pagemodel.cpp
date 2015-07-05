@@ -3,13 +3,12 @@
 #include <QXmlStreamWriter>
 #include <QDomDocument>
 
-#include "page.h"
-#include "batch.h"
+#include "pagemodel.h"
 #include "applicationmanager.h"
 #include "settingsmanager.h"
+#include "documentmodel.h"
 
-
-Page::Page(const QString &fileName, const QString &thumbName) :
+PageModel::PageModel(const QString &fileName, const QString &thumbName) :
     QObject(0)
 {
     //
@@ -23,14 +22,14 @@ Page::Page(const QString &fileName, const QString &thumbName) :
     mZones = new RectList();
 }
 
-Page::~Page()
+PageModel::~PageModel()
 {
     //
     qDeleteAll(*mZones);
     delete mZones;
 }
 
-void Page::writeToXML(QXmlStreamWriter &writer) const
+void PageModel::writeToXML(QXmlStreamWriter &writer) const
 {
     //attributes
     writer.writeAttribute("file", mFileName);
@@ -47,7 +46,7 @@ void Page::writeToXML(QXmlStreamWriter &writer) const
     }
 }
 
-bool Page::readFromDomElement(const QDomElement &element)
+bool PageModel::readFromDomElement(const QDomElement &element)
 {
     //attributes
     mFileName = element.attribute("file",QString());
@@ -71,20 +70,22 @@ bool Page::readFromDomElement(const QDomElement &element)
     return true;
 }
 
-QString Page::fileNameAbsolute()
+QString PageModel::fileNameAbsolute()
 {
-    QDir dir(ApplicationManager::instance()->batch()->path());
-    return dir.absoluteFilePath(mFileName);
+    // TODO
+    //QDir dir(ApplicationManager::instance()->document()->path());
+    return QString();//dir.absoluteFilePath(mFileName);
 }
 
-const QPixmap Page::thumb()
+const QPixmap PageModel::thumb()
 {
-    QDir batchDir(ApplicationManager::instance()->batch()->path());
-    QPixmap pixmap(batchDir.absoluteFilePath(mThumbName));
-    return pixmap;
+    // TODO
+//    QDir batchDir(ApplicationManager::instance()->document()->path());
+//    QPixmap pixmap(batchDir.absoluteFilePath(mThumbName));
+    return QPixmap();//pixmap;
 }
 
-void Page::mergeZones(const ZoneList &zones)
+void PageModel::mergeZones(const ZoneList &zones)
 {
     //remove old zones if needed
     if (settingsManager->replaceZonesOnAnalyze())

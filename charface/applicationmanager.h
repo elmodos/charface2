@@ -9,7 +9,7 @@
 
 #define appManager (ApplicationManager::instance())
 
-class Batch;
+class DocumentModel;
 
 class ApplicationManager : public QObject
 {
@@ -22,20 +22,19 @@ public:
     static ApplicationManager *instance();
 
     //
-    Batch *batch() { return mBatch; }
-    bool batchNew(const QString &path = QString());
-    bool batchOpen(const QString &path);
-    bool batchSaveAs(const QString &newPath);
+    bool documentNew(const QString &path = QString());
+    bool documentOpen(const QString &path);
+    bool documentSaveAs(const QString &newPath);
 
     //
-    void addFilesToBatch(const QStringList &list, const QString &tempDirPath, bool interactive = false);
+    void addFilesToDocument(const QStringList &list, const QString &tempDirPath, bool interactive = false);
 
     //
     void readPages(const IntList &indexes);
     void analyzePages(const IntList &indexes);
 
 signals:
-    void batchModified();
+    void documentModified();
     void progressChanged(int);
     void finishedAnalyze();
 
@@ -50,6 +49,9 @@ private:
     static ApplicationManager *mInstance;
 
     //
+    DocumentModel *document() { return mDocument; }
+
+    //
     void analyzePagesBackground(const IntList &indexes);
     void addFilesToBatchBackground(const QStringList &list, const QString &tempDirPath, bool interactive = false);
 
@@ -58,7 +60,7 @@ private:
     ~ApplicationManager();
 
     //
-    Batch *mBatch;
+    DocumentModel *mDocument;
 
     //
     ProgressDialog *mProgressDialog;

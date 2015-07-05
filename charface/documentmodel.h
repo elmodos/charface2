@@ -1,27 +1,27 @@
-#ifndef BATCH_H
-#define BATCH_H
+#ifndef DOCUMENTMODEL_H
+#define DOCUMENTMODEL_H
 
 #include <QObject>
 #include <QList>
 #include <QString>
 #include <QDebug>
 
-#include "page.h"
+#include "pagemodel.h"
 
 #define maxBatchVersionSupported (1.0f)
 #define batchFileName ("batch.xml")
 #define batchFileVersion (QString::number(maxBatchVersionSupported))
 
-typedef QList<Page*> PagesList;
+typedef QList<PageModel *> PagesList;
 
-class Batch : public QObject
+class DocumentModel : public QObject
 {
     Q_OBJECT
 
 public:
     //
-    explicit Batch(const QString path = QString());
-    ~Batch();
+    explicit DocumentModel(const QString path = QString());
+    ~DocumentModel();
 
     //
     PagesList *pages() { return mPages; }
@@ -57,4 +57,4 @@ private:
     QString mErrorMessage;
 };
 
-#endif // BATCH_H
+#endif // DOCUMENTMODEL_H

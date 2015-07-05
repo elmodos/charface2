@@ -8,6 +8,7 @@
 #include "cfplugininterface.h"
 #include "zone.h"
 
+class DocumentModel;
 class PageGraphicsScene;
 
 namespace Ui {
@@ -19,7 +20,7 @@ class MainWindow : public QMainWindow, ScrollItemViewDelegate
     Q_OBJECT
     
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(DocumentModel &document, QWidget *parent = 0);
     ~MainWindow();
 
     void show();
@@ -93,6 +94,7 @@ private:
     Ui::MainWindow *ui;
 
     //
+    DocumentModel *mDocument;
     int mCurrentPageIndex;
 
     //

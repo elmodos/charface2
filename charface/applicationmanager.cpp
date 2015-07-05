@@ -7,21 +7,21 @@
 #include "progressdialog.h"
 #include "pluginmanager.h"
 #include "settingsmanager.h"
-#include "batch.h"
+#include "documentmodel.h"
 
 ApplicationManager * ApplicationManager::mInstance = NULL;
 
 ApplicationManager::ApplicationManager()
 {
-    mBatch = NULL;
+    mDocument = NULL;
     mProgressDialog = NULL;
 
-    batchNew();
+    documentNew();
 }
 
 ApplicationManager::~ApplicationManager()
 {
-    delete mBatch;
+    delete mDocument;
 }
 
 void ApplicationManager::createInstance()
@@ -46,46 +46,46 @@ ApplicationManager *ApplicationManager::instance()
     return mInstance;
 }
 
-bool ApplicationManager::batchNew(const QString &path)
+bool ApplicationManager::documentNew(const QString &path)
 {
     //
-    if (mBatch)
-        delete mBatch;
+    if (mDocument)
+        delete mDocument;
 
     //
-    mBatch = new Batch(path);
+    mDocument = new DocumentModel(path);
 
     //
-    emit batchModified();
+    emit documentModified();
 
     //
     return true;
 }
 
-bool ApplicationManager::batchOpen(const QString &path)
+bool ApplicationManager::documentOpen(const QString &path)
 {
     //
-    batchNew(path);
-    mBatch->loadFromDir(path);
+    documentNew(path);
+    mDocument->loadFromDir(path);
 
     //
-    emit batchModified();
+    emit documentModified();
 
     //
     return true;
 }
 
-bool ApplicationManager::batchSaveAs(const QString &newPath)
+bool ApplicationManager::documentSaveAs(const QString &newPath)
 {
     //
-    mBatch->saveToDir(newPath);
-    batchOpen(newPath);
+    mDocument->saveToDir(newPath);
+    documentOpen(newPath);
 
     //
     return true;
 }
 
-void ApplicationManager::addFilesToBatch(const QStringList &list, const QString &tempDirPath, bool interactive)
+void ApplicationManager::addFilesToDocument(const QStringList &list, const QString &tempDirPath, bool interactive)
 {
     if (!list.size())return;
 
@@ -106,7 +106,7 @@ void ApplicationManager::addFilesToBatch(const QStringList &list, const QString 
     foreach(QString fileName, list)
     {
         bool isInTemp = (tempDirPath.length() && fileName.indexOf(tempDirPath) == 0);
-        bool added = ApplicationManager::instance()->batch()->addFile(fileName, isInTemp);
+        bool added = ApplicationManager::instance()->document()->addFile(fileName, isInTemp);
 
         QString fn = QFileInfo(fileName).fileName();
 
@@ -133,7 +133,7 @@ void ApplicationManager::readPages(const IntList &indexes)
     qDebug() << "void ApplicationManager::readPage(int index)";
 
     // Page
-    Page *page = 0; // mBatch->pages()->at( indexes );
+    PageModel *page = 0; // mBatch->pages()->at( indexes );
 
     // WARN: Problem is here! Pointer page == 0!
 
@@ -234,7 +234,7 @@ void ApplicationManager::analyzePagesBackground(const IntList &indexes)
         int index = indexes[i];
 
         //get page
-        Page *page = mBatch->pages()->at(index);
+        PageModel *page = mDocument->pages()->at(index);
 
         //load image file
         QImage *img = new QImage( page->fileNameAbsolute());
@@ -258,7 +258,7 @@ void ApplicationManager::analyzePagesBackground(const IntList &indexes)
     }
 
     //rewrite batch xml file
-    mBatch->saveXML();
+    mDocument->saveXML();
 
     //
     emit finishedAnalyze();

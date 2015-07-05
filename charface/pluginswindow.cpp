@@ -29,7 +29,7 @@ PluginsWindow::PluginsWindow(QWidget *parent) :
     ui->comboBoxPluginTypes->clear();
     for (int pt = PT_All; pt < PT_Count; pt++)
     {
-        QString str = cfPluginTypeToString((PluginType)pt);
+        QString str = pluginTypeToString((PluginType)pt);
         ui->comboBoxPluginTypes->addItem(str);
     }
 }
@@ -139,4 +139,19 @@ void PluginsWindow::showPluginsList()
     //resize columns
     ui->tableWidget->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
     ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
+}
+
+const QString PluginsWindow::pluginTypeToString(const PluginType pt) const
+{
+    switch(pt)
+    {
+        case PT_All: return QString("All plugins");
+        case PT_Import: return QString("Import plugins");
+        case PT_ImageEdit: return QString("Image manipulation plugins");
+        case PT_Analyze: return QString("Image structure analyzing plugins");
+        case PT_OCR: return QString("OCR plugins");
+        case PT_TextPostprocessing: return QString("Text postprocessing plugins");
+        case PT_Export: return QString("Export plugins");
+        default: return QString("Unknown");
+    }
 }

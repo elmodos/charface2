@@ -5,6 +5,7 @@
 #include "pluginmanager.h"
 #include "settingsmanager.h"
 #include "mainwindow.h"
+#include "documentmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -24,7 +25,8 @@ int main(int argc, char *argv[])
     PluginManager::instance()->loadPluginsFromDir("/home/elmodos/Desktop/build/plugins");
 
     // Show main window
-    MainWindow *mainWindow = new MainWindow();
+    DocumentModel *document = new DocumentModel();
+    MainWindow *mainWindow = new MainWindow(*document);
     mainWindow->show();
 
     int retVal = app.exec();

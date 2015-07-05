@@ -5,20 +5,21 @@
 #include <QList>
 #include <QIcon>
 
-#include "cfplugininterface.h"
 #include "zone.h"
+#include "cfplugininterface.h"
 
-class Batch;
 typedef QList<Zone*> RectList;
 
 class QXmlStreamWriter;
 class QDomElement;
-class Page : public QObject
+class PageModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit Page(const QString &fileName = QString(), const QString &thumbName = QString());
-    ~Page();
+    //
+    explicit PageModel(const QString &fileName = QString(), const QString &thumbName = QString());
+    ~PageModel();
+
     //
     void writeToXML(QXmlStreamWriter &writer) const;
     bool readFromDomElement(const QDomElement &element);

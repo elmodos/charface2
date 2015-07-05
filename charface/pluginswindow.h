@@ -2,6 +2,7 @@
 #define PLUGINSWINDOW_H
 
 #include <QDialog>
+#include "cfplugininterface.h"
 
 namespace Ui {
 class PluginsWindow;
@@ -25,6 +26,7 @@ private slots:
 
 private:
     void showPluginAboutDialog(CFPluginInterface *plugin);
+    const QString pluginTypeToString(const PluginType pt) const;
 
     Ui::PluginsWindow *ui;
 };

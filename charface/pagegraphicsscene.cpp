@@ -42,7 +42,7 @@ PageGraphicsScene::PageGraphicsScene(QWidget *parent)
     edgeMagnetDistance = settingsManager->zoneRectEdgeMagnetDistance();
 }
 
-bool PageGraphicsScene::loadPage(Page *page)
+bool PageGraphicsScene::loadPage(PageModel *page)
 {
     //
     mPage = page;

@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 
-#include "page.h"
+#include "pagemodel.h"
 #include "zonerectitem.h"
 
 enum {
@@ -30,8 +30,8 @@ class PageGraphicsScene : public QGraphicsScene
 public:
     explicit PageGraphicsScene(QWidget *parent = 0);
     
-    bool loadPage(Page *page);
-    Page *page() { return mPage; }
+    bool loadPage(PageModel *page);
+    PageModel *page() { return mPage; }
     QGraphicsPixmapItem *pageItem() { return mPixmapItem; }
 
     //
@@ -84,7 +84,7 @@ protected:
 
 private:
     //
-    Page *mPage;
+    PageModel *mPage;
     int mPageWidth, mPageHeight;
 
     //

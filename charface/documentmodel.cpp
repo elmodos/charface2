@@ -7,10 +7,10 @@
 #include <QImageWriter>
 #include <iterator>
 
-#include "batch.h"
+#include "documentmodel.h"
 #include "settingsmanager.h"
 
-Batch::Batch(const QString path) :
+DocumentModel::DocumentModel(const QString path) :
     QObject(0)
 {
     mPages = new PagesList();
@@ -22,17 +22,17 @@ Batch::Batch(const QString path) :
     loadFromDir(mPath);
 }
 
-Batch::~Batch()
+DocumentModel::~DocumentModel()
 {
     for (int i = 0; i < mPages->size(); i++)
     {
-        Page *page = mPages->at(i);
+        PageModel *page = mPages->at(i);
         delete page;
     }
     delete mPages;
 }
 
-const QString Batch::tempPath(bool createPath = true)
+const QString DocumentModel::tempPath(bool createPath = true)
 {
     QDir tdir(mPath);
     QString tmpPath = tdir.absoluteFilePath("tmp");
@@ -43,14 +43,14 @@ const QString Batch::tempPath(bool createPath = true)
     return tmpPath;
 }
 
-bool Batch::isSaved()
+bool DocumentModel::isSaved()
 {
     bool isAtTemp = mPath == SettingsManager::instance()->defaultBatchPath();
     bool hasNoPages = mPages->size() == 0;
     return (isAtTemp && hasNoPages) || (!isAtTemp);
 }
 
-void Batch::saveToDir(const QString &path)
+void DocumentModel::saveToDir(const QString &path)
 {
     //
     copyBatchFilesTo(path);
@@ -68,12 +68,12 @@ void Batch::saveToDir(const QString &path)
 
 }
 
-void Batch::save()
+void DocumentModel::save()
 {
     saveToDir(mPath);
 }
 
-bool Batch::addFile(const QString &path, bool move)
+bool DocumentModel::addFile(const QString &path, bool move)
 {
     //load
     QImage *image = new QImage(path);
@@ -126,7 +126,7 @@ bool Batch::addFile(const QString &path, bool move)
 
     if (res)
     {
-        Page *page = new Page(nameWithExt, thumbName);
+        PageModel *page = new PageModel(nameWithExt, thumbName);
         page->setParent(this);
         mPages->push_back(page);
         saveXML();
@@ -135,9 +135,9 @@ bool Batch::addFile(const QString &path, bool move)
     return res;
 }
 
-bool Batch::deletePage(int index)
+bool DocumentModel::deletePage(int index)
 {
-    Page *page = mPages->at(index);
+    PageModel *page = mPages->at(index);
 
     QDir dir(mPath);
     bool res = dir.remove( page->fileName() );
@@ -152,18 +152,18 @@ bool Batch::deletePage(int index)
     return res;
 }
 
-void Batch::loadFromDir(const QString &path)
+void DocumentModel::loadFromDir(const QString &path)
 {
     mPath = path;
     loadXML();
 }
 
-bool Batch::loadXML()
+bool DocumentModel::loadXML()
 {
     //clear before load
     for (int i = 0; i < mPages->size(); i++)
     {
-        Page *page = mPages->at(i);
+        PageModel *page = mPages->at(i);
         delete page;
     }
     mPages->clear();
@@ -199,7 +199,7 @@ bool Batch::loadXML()
     while ( !el.isNull() )
     {
         //compose page
-        Page *page = new Page();
+        PageModel *page = new PageModel();
         page->readFromDomElement(el);
         mPages->push_back(page);
 
@@ -211,7 +211,7 @@ bool Batch::loadXML()
     return true;
 }
 
-bool Batch::saveXML()
+bool DocumentModel::saveXML()
 {
     //
     QDir batchDir(mPath);
@@ -243,7 +243,7 @@ bool Batch::saveXML()
             size_t pagesCount = mPages->size();
             for (size_t i = 0; i < pagesCount; i++)
             {
-                Page *page = mPages->at(i);
+                PageModel *page = mPages->at(i);
 
                 //page entry
                 writer.writeStartElement("file");
@@ -262,7 +262,7 @@ bool Batch::saveXML()
     return true;
 }
 
-bool Batch::removeAllFilesInDir(const QString &path)
+bool DocumentModel::removeAllFilesInDir(const QString &path)
 {
     qDebug() << "Removing all files from" << path;
     QDir dir(path);
@@ -276,7 +276,7 @@ bool Batch::removeAllFilesInDir(const QString &path)
     return true;
 }
 
-bool Batch::copyBatchFilesTo(const QString &newPath)
+bool DocumentModel::copyBatchFilesTo(const QString &newPath)
 {
     //
     QDir dirFrom(mPath);
@@ -286,7 +286,7 @@ bool Batch::copyBatchFilesTo(const QString &newPath)
     for(int i = 0; i < mPages->size(); i++)
     {
         //
-        Page *page = mPages->at(i);
+        PageModel *page = mPages->at(i);
 
         //page and thumb
         copyFile(dirFrom.absoluteFilePath(page->fileName()), dirTo.absoluteFilePath(page->fileName()));
@@ -296,7 +296,7 @@ bool Batch::copyBatchFilesTo(const QString &newPath)
     return true;
 }
 
-bool Batch::copyFile(const QString &fromF, const QString &toF)
+bool DocumentModel::copyFile(const QString &fromF, const QString &toF)
 {
     QFile file(fromF);
     bool ok = file.copy(toF);

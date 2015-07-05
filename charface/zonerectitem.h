@@ -5,7 +5,7 @@
 #include <QStaticText>
 
 class Zone;
-class Page;
+class PageModel;
 
 enum {
     QGraphicsItemCustomRect = QGraphicsItem::UserType + 1
