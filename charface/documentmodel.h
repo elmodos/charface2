@@ -5,11 +5,13 @@
 #include <QList>
 #include <QString>
 #include <QDebug>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 #include "pagemodel.h"
-
 #define maxBatchVersionSupported (1.0f)
 #define batchFileName ("batch.xml")
+#define documentJsonName ("document.json")
 #define batchFileVersion (QString::number(maxBatchVersionSupported))
 
 typedef QList<PageModel *> PagesList;
@@ -38,6 +40,11 @@ public:
     //
     QString errorMessage() { return mErrorMessage; }
 
+    //
+    bool saveJsonToFile(const QString &fileName = documentJsonName);
+    QJsonDocument toJsonDocument() const;
+    QJsonValue toJson() const;
+
     //need to call directly from app manager when pageView rectangle changes
     bool saveXML();
 
@@ -51,6 +58,7 @@ private:
     bool copyBatchFilesTo(const QString &newPath);
     bool copyFile(const QString &fromF, const QString &toF);
 
+    double mVersion;
     PagesList *mPages;
     QString mPath;
 

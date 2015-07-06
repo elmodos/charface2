@@ -6,12 +6,14 @@
 #include <QDebug>
 #include <QImageWriter>
 #include <iterator>
+#include <QJsonArray>
 
 #include "documentmodel.h"
 #include "settingsmanager.h"
 
 DocumentModel::DocumentModel(const QString path) :
-    QObject(0)
+    QObject(0),
+    mVersion(maxBatchVersionSupported)
 {
     mPages = new PagesList();
     mPath = path;
@@ -150,6 +152,64 @@ bool DocumentModel::deletePage(int index)
     delete page;
 
     return res;
+}
+
+bool DocumentModel::saveJsonToFile(const QString &fileName)
+{
+    QDir batchDir(mPath);
+    QString fullFilePath = batchDir.absoluteFilePath(fileName);
+    QFile file(fullFilePath);
+
+    //
+    if (!file.open(QIODevice::WriteOnly))
+        return false;
+
+    //
+    QJsonDocument document = toJsonDocument();
+
+    //
+    QByteArray jsonBytes = document.toJson();
+    qint64 bytesWritten = file.write(jsonBytes);
+    file.close();
+
+    return bytesWritten == jsonBytes.length();
+}
+
+QJsonDocument DocumentModel::toJsonDocument() const
+{
+    QJsonDocument document;
+    QJsonValue value = toJson();
+
+    // just in case
+    if (value.isArray())
+    {
+        document.setArray(value.toArray());
+    }
+    else if (value.isObject())
+    {
+        document.setObject(value.toObject());
+    }
+
+    return document;
+}
+
+QJsonValue DocumentModel::toJson() const
+{
+    QJsonObject object;
+
+    // Version
+    object["version"] = QJsonValue(mVersion);
+
+    // Pages
+    QJsonArray pagesArray;
+    foreach(PageModel *page, *mPages)
+    {
+        pagesArray.append(QJsonValue(page->toJson()));
+    }
+    object["pages"] = pagesArray;
+
+    //
+    return QJsonValue(object);
 }
 
 void DocumentModel::loadFromDir(const QString &path)

@@ -1,22 +1,39 @@
 #include <QPalette>
 #include <QXmlStreamWriter>
 #include <QDomDocument>
+#include <QJsonValue>
+#include <QJsonObject>
+#include <QJsonArray>
 
-#include "zone.h"
+#include "pagezonemodel.h"
 
-Zone::Zone()
+PageZoneModel::PageZoneModel() :
+    mPolygon()
 {
     //
     mZoneType = ZT_Unknown;
 }
 
-Zone::Zone(const Zone &other) :
-    QRect(other)
+PageZoneModel::PageZoneModel(const QRect &rectangle) :
+    mPolygon()
 {
-    mZoneType = other.mZoneType;
+    //
+    mZoneType = ZT_Unknown;
+
+    //
+    mPolygon.append(rectangle.topLeft());
+    mPolygon.append(rectangle.topRight());
+    mPolygon.append(rectangle.bottomRight());
+    mPolygon.append(rectangle.bottomLeft());
 }
 
-QColor Zone::zoneColor(const ZoneType zoneType)
+PageZoneModel::PageZoneModel(const PageZoneModel &other)
+{
+    mZoneType = other.mZoneType;
+    mPolygon = other.mPolygon;
+}
+
+QColor PageZoneModel::zoneColor(const ZoneType zoneType)
 {
     switch (zoneType)
     {
@@ -39,7 +56,7 @@ QColor Zone::zoneColor(const ZoneType zoneType)
     return QColor(0,0,0);
 }
 
-QString Zone::zoneToString(ZoneType zoneType)
+QString PageZoneModel::zoneToString(ZoneType zoneType)
 {
     QStringList list;
     list
@@ -51,28 +68,58 @@ QString Zone::zoneToString(ZoneType zoneType)
     return list.at(zoneType);
 }
 
-void Zone::writeToXML(QXmlStreamWriter &writer) const
+QJsonValue PageZoneModel::toJson() const
+{
+    QJsonObject object;
+
+    //
+    object["type"] = QJsonValue(mZoneType);
+
+    // Points
+    QJsonArray pointsArray;
+    foreach(QPoint point, mPolygon)
+    {
+        QJsonObject pointObject;
+        pointObject["x"] = QJsonValue(point.x());
+        pointObject["y"] = QJsonValue(point.y());
+
+        pointsArray.append(QJsonValue(pointObject));
+    }
+    object["polygon"] = QJsonValue(pointsArray);
+
+    //
+    return QJsonValue(object);
+}
+
+
+void PageZoneModel::writeToXML(QXmlStreamWriter &writer) const
 {
     //
     writer.writeAttribute("type", QString::number(mZoneType));
 
+    // TODO
+    /*
     //coordinates
     writer.writeAttribute("left", QString::number(left()));
     writer.writeAttribute("top", QString::number(top()));
     writer.writeAttribute("height", QString::number(height()));
     writer.writeAttribute("width", QString::number(width()));
+    */
 }
 
-bool Zone::readFromDomElement(const QDomElement &element)
+bool PageZoneModel::readFromDomElement(const QDomElement &element)
 {
     //
     mZoneType = element.attribute("type", QString::number(ZT_Unknown)).toInt();
 
+    // TODO
+    /*
     //coordinates
     setLeft(element.attribute("left", QString("0")).toInt());
     setTop(element.attribute("top", QString("0")).toInt());
     setHeight(element.attribute("height", QString("0")).toInt());
     setWidth(element.attribute("width", QString("0")).toInt());
+     */
 
     //
     return true;

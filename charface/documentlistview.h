@@ -6,29 +6,22 @@
 
 #include "typedefs.h"
 
-class PageListView;
+class DocumentListView;
 class PageItemWidget;
+class DocumentModel;
 
 typedef PageItemWidget* PageItemWidgetRef;
 typedef QVector<PageItemWidgetRef> WidgetList;
 
-// NOTE: Recomend to move to separate file
-class ScrollItemViewDelegate
-{
-public:
-    virtual int plvItemsCount() = 0;
-    virtual void plvSetupItem(int index, PageItemWidgetRef itemWidget) = 0;
-};
-
-class PageListView : public QScrollArea
+class DocumentListView : public QScrollArea
 {
     Q_OBJECT
     
 public:
-    explicit PageListView(QWidget *parent = 0);
-    ~PageListView();
+    explicit DocumentListView(QWidget *parent = 0);
+    ~DocumentListView();
 
-    void setDelegate(ScrollItemViewDelegate *delegate) { mDelegate = delegate; }
+    void setDocument(DocumentModel *document);
     void reload();
     void clearSelection(bool refresh);
 
@@ -49,13 +42,14 @@ protected:
 
     //
     void updateWidgets(bool reconfigureVisibles = false);
+    void setupPageItem(const int index, PageItemWidgetRef itemWidget);
 
     //
     void createOverlayWidget();
     QWidget *mOverlayWidget;
 
 private:
-    ScrollItemViewDelegate *mDelegate;
+    DocumentModel *mDocument;
     BoolList mFocuses;
     IntList mFocusIndexes;
     WidgetList mWidgets;

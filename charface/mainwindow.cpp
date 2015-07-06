@@ -34,8 +34,8 @@ MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
     mCurrentPageIndex = -1;
 
     //add items view
-    mItemsListView = new PageListView();
-    mItemsListView->setDelegate(this);
+    mItemsListView = new DocumentListView();
+    mItemsListView->setDocument(mDocument);
     ui->widget->layout()->addWidget(mItemsListView);
     connect( mItemsListView, SIGNAL( itemFocused(int) ), this, SLOT( onPageListSelectionChanged(int) ) );
 
@@ -65,18 +65,18 @@ MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
     ui->buttonMouseDelete->setIcon(QIcon::fromTheme("edit-delete"));
 
     //setup page view
-    ui->graphicsPageView->setBackgroundRole(QPalette::Window);
-    ui->graphicsViewActualSize->setBackgroundRole(QPalette::Window);
+    ui->pageView->setBackgroundRole(QPalette::Window);
+    ui->pageViewActualSize->setBackgroundRole(QPalette::Window);
 
     //set page scene
     mPageView = new PageGraphicsScene(this);
-    mPageView->seteScalableView(ui->graphicsPageView->viewport());
+    mPageView->seteScalableView(ui->pageView->viewport());
     updateSelectType(mPageView->zonePenType());
 
     //show scene
-    ui->graphicsViewActualSize->setScene(mPageView);
-    ui->graphicsPageView->setScene(mPageView);
-    ui->graphicsPageView->setRenderHint(QPainter::SmoothPixmapTransform, true);
+    ui->pageViewActualSize->setScene(mPageView);
+    ui->pageView->setScene(mPageView);
+    ui->pageView->setRenderHint(QPainter::SmoothPixmapTransform, true);
 
     //setup handlers
     connect( mPageView, SIGNAL( pageChanged() ), this, SLOT( onPageViewChangedPage() ) );
@@ -209,7 +209,7 @@ void MainWindow::setPageScale(qreal scale)
     mPageView->setScaleInView(scale);
 
     //scale
-    ui->graphicsPageView->setZoom(scale);
+    ui->pageView->setZoom(scale);
 
     //update combo box
     int scalePercent = scale * 100;
@@ -249,6 +249,10 @@ bool MainWindow::onBatchSaveAs()
 
     //
     if (!dialog.exec()) return false;
+
+    // TODO
+    // next line just is for testing, need complete implementation
+    mDocument->saveJsonToFile();
 
     //
     return appManager->documentSaveAs(dialog.directory().absolutePath());
@@ -393,8 +397,8 @@ void MainWindow::onPageListSelectionChanged(int index)
     if (index < 0 || index >= mDocument->pages()->size())
         return;
 
-    QLabel *label = new QLabel(tr("Loading page..."),ui->graphicsPageView);
-    label->resize(ui->graphicsPageView->viewport()->size());
+    QLabel *label = new QLabel(tr("Loading page..."),ui->pageView);
+    label->resize(ui->pageView->viewport()->size());
     label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
     label->show();
     QApplication::instance()->processEvents();
@@ -405,8 +409,8 @@ void MainWindow::onPageListSelectionChanged(int index)
 
     //resize
     QGraphicsPixmapItem *item = mPageView->pageItem();
-    ui->graphicsViewActualSize->setSceneRect(0,0,item->boundingRect().width(),item->boundingRect().height());
-    ui->graphicsPageView->setSceneRect(0,0,item->boundingRect().width(),item->boundingRect().height());
+    ui->pageViewActualSize->setSceneRect(0,0,item->boundingRect().width(),item->boundingRect().height());
+    ui->pageView->setSceneRect(0,0,item->boundingRect().width(),item->boundingRect().height());
 
     //scale
     ui->buttonZoomFitWidth->click();
@@ -427,7 +431,7 @@ void MainWindow::onZoom()
     if(sender() == ui->buttonZoomOriginal)
     {
         //store offset
-        QGraphicsView *view = ui->graphicsPageView;
+        QGraphicsView *view = ui->pageView;
         QPointF topLeft = view->mapToScene(view->viewport()->rect().topLeft());
 
         //set scale value
@@ -440,7 +444,7 @@ void MainWindow::onZoom()
     if(sender() == ui->buttonZoomFit)
     {
         //
-        QGraphicsView *view = ui->graphicsPageView;
+        QGraphicsView *view = ui->pageView;
 
         //
         QSize sz = view->maximumViewportSize();
@@ -455,13 +459,13 @@ void MainWindow::onZoom()
     if(sender() == ui->buttonZoomFitWidth)
     {
         //show scrollbar
-        Qt::ScrollBarPolicy policyV = ui->graphicsPageView->verticalScrollBarPolicy();
-        Qt::ScrollBarPolicy policyH = ui->graphicsPageView->horizontalScrollBarPolicy();
-        ui->graphicsPageView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-        ui->graphicsPageView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        Qt::ScrollBarPolicy policyV = ui->pageView->verticalScrollBarPolicy();
+        Qt::ScrollBarPolicy policyH = ui->pageView->horizontalScrollBarPolicy();
+        ui->pageView->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+        ui->pageView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
         //
-        QGraphicsView *view = ui->graphicsPageView;
+        QGraphicsView *view = ui->pageView;
         QSize sz = view->maximumViewportSize();
 
         //
@@ -469,16 +473,16 @@ void MainWindow::onZoom()
         setPageScale( scale );
 
         //restore scrollbar policy and scroll to top
-        ui->graphicsPageView->setVerticalScrollBarPolicy(policyV);
-        ui->graphicsPageView->setHorizontalScrollBarPolicy(policyH);
+        ui->pageView->setVerticalScrollBarPolicy(policyV);
+        ui->pageView->setHorizontalScrollBarPolicy(policyH);
 
-        ui->graphicsPageView->verticalScrollBar()->setValue(0);
+        ui->pageView->verticalScrollBar()->setValue(0);
     }
 
     if(sender() == ui->buttonZoomOut)
     {
         //
-        qreal scale = ui->graphicsPageView->getZoom();
+        qreal scale = ui->pageView->getZoom();
         qreal step = settingsManager->pageScaleMultiplier();
 
         //
@@ -489,7 +493,7 @@ void MainWindow::onZoom()
     if(sender() == ui->buttonZoomIn)
     {
         //
-        qreal scale = ui->graphicsPageView->getZoom();
+        qreal scale = ui->pageView->getZoom();
         qreal step = settingsManager->pageScaleMultiplier();
 
         //
@@ -691,6 +695,9 @@ void MainWindow::updatePagesListWidget()
 
 void MainWindow::updateToolbar()
 {
+    // temporary
+    ui->toolBar->setIconSize(QSize(32, 32));
+
     //reset
     ui->toolBar->clear();
 
@@ -1060,15 +1067,4 @@ void MainWindow::show()
 {
     updateUI();
     QMainWindow::show();
-}
-
-int MainWindow::plvItemsCount()
-{
-    return mDocument->pages()->size();
-}
-
-void MainWindow::plvSetupItem(int index, PageItemWidgetRef itemWidget)
-{
-    itemWidget->setTitle( QString("Page %1").arg(index + 1) );
-    itemWidget->setPixmap( mDocument->pages()->at(index)->thumb() );
 }

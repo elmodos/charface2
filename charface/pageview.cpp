@@ -1,7 +1,13 @@
-#include "pagegraphicsview.h"
+#include "pageview.h"
 
-PageGraphicsView::PageGraphicsView(QWidget *parent) :
+PageView::PageView(QWidget *parent) :
     QGraphicsView(parent)
 {
     mScale = 1;
+}
+
+void PageView::setZoom(qreal scale)
+{
+    QGraphicsView::setTransform(QTransform().scale(scale, scale), false);
+    mScale = scale;
 }

@@ -5,7 +5,7 @@
 #include <QGraphicsPixmapItem>
 
 #include "pagemodel.h"
-#include "zonerectitem.h"
+#include "pagezoneview.h"
 
 enum {
     MS_None,
@@ -80,7 +80,7 @@ protected:
 
     //
     void createRects();
-    ZoneRectItem *createRect(Zone *zone, int index);
+    PageZoneView *createRect(PageZoneModel *zone, int index);
 
 private:
     //
@@ -104,7 +104,7 @@ private:
     QWidget *mScalableView;
 
     //
-    ZoneRectItem *mCurrentItem;
+    PageZoneView *mCurrentItem;
     MoveState mMoveState;
     QPointF mMovePos;
 

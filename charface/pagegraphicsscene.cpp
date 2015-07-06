@@ -9,8 +9,8 @@
 
 #include "settingsmanager.h"
 #include "pagegraphicsscene.h"
-#include "zonerectitem.h"
-#include "zone.h"
+#include "pagezoneview.h"
+#include "pagezonemodel.h"
 
 PageGraphicsScene::PageGraphicsScene(QWidget *parent)
     : QGraphicsScene(parent),
@@ -102,7 +102,7 @@ void PageGraphicsScene::onChangeZoneType()
 
     if (mCurrentItem)
     {
-        mCurrentItem->zone()->setZoneType(tag);
+        mCurrentItem->getZone()->setZoneType(tag);
         mCurrentItem->setupZoneDepent();
         update();
         emit pageChanged();
@@ -117,7 +117,7 @@ void PageGraphicsScene::onDeleteZone()
     items();
     RectList *zones = mPage->zones();
     for (RectList::iterator it = zones->begin(); it != zones->end(); ++it)
-        if (*it == mCurrentItem->zone())
+        if (*it == mCurrentItem->getZone())
         {
             zones->erase(it);
             removeItem( mCurrentItem );
@@ -138,9 +138,9 @@ void PageGraphicsScene::createRects()
         addItem( createRect(zones->at(i), i+1) );
 }
 
-ZoneRectItem *PageGraphicsScene::createRect(Zone *zone, int index)
+PageZoneView *PageGraphicsScene::createRect(PageZoneModel *zone, int index)
 {
-    ZoneRectItem *rectItem = new ZoneRectItem(zone);
+    PageZoneView *rectItem = new PageZoneView(zone);
     rectItem->setTitle(QString::number(index));
     return rectItem;
 }
@@ -167,12 +167,12 @@ void PageGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF p = event->scenePos();
         mMovePos = p;
         // Using QTransform as temporary solution
-        ZoneRectItem *item = dynamic_cast<ZoneRectItem*>( itemAt(p, QTransform()) );
+        PageZoneView *item = dynamic_cast<PageZoneView*>( itemAt(p, QTransform()) );
 
         //skip pixmap item
-        if (item && item->type() == QGraphicsItemCustomRect && mPixmapItem)
+        if (item && item->type() == QGraphicsItemCustomPolygon && mPixmapItem)
         {
-            ZoneRectItem *rectItem = dynamic_cast<ZoneRectItem*>(item);
+            PageZoneView *rectItem = dynamic_cast<PageZoneView*>(item);
             if(rectItem)
             {
                 //
@@ -193,20 +193,24 @@ void PageGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         {
 
             //create zone instance
-            Zone *zone = new Zone();
-            zone->setRect(p.x(), p.y(), edgeMagnetDistance, edgeMagnetDistance);
+            QRect rect(p.x(), p.y(), edgeMagnetDistance, edgeMagnetDistance);
+            PageZoneModel *zone = new PageZoneModel(rect);
             zone->setZoneType(mZonePenType);
             mPage->zones()->append(zone);
 
             //create pageview rect instance
-            ZoneRectItem *rectItem = createRect(zone, mPage->zones()->count());
+            PageZoneView *rectItem = createRect(zone, mPage->zones()->count());
             addItem(rectItem);
 
+            // TODO
+            /*
             //store state
             mMovePos = zone->bottomRight();
             mMoveState = MS_BottomRight;
             mCurrentItem = rectItem;
             qDebug() << "new rect draw started";
+            */
+
         }
     }
 
@@ -216,17 +220,17 @@ void PageGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF p = event->scenePos();
         mMovePos = p;
         // Using QTransform() as temporary solution
-        ZoneRectItem *item = dynamic_cast<ZoneRectItem*>( itemAt(p, QTransform()) );
+        PageZoneView *item = dynamic_cast<PageZoneView*>( itemAt(p, QTransform()) );
 
         //skip pixmap item
-        if (item && item->type() == QGraphicsItemCustomRect && mPixmapItem)
+        if (item && item->type() == QGraphicsItemCustomPolygon && mPixmapItem)
         {
-            ZoneRectItem *rectItem = dynamic_cast<ZoneRectItem*>(item);
+            PageZoneView *rectItem = dynamic_cast<PageZoneView*>(item);
             if(rectItem)
             {
                 //find and delete zone from list
                 RectList *zones = mPage->zones();
-                Zone *zone = rectItem->zone();
+                PageZoneModel *zone = rectItem->getZone();
                 for (RectList::iterator it = zones->begin(); it != zones->end(); ++it)
                     if (zone == *it)
                     {
@@ -249,10 +253,10 @@ void PageGraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         QPointF p = event->scenePos();
         mMovePos = p;
         // Using QTransform() as temporary solution
-        ZoneRectItem *item = dynamic_cast<ZoneRectItem*>( itemAt(p, QTransform()) );
+        PageZoneView *item = dynamic_cast<PageZoneView*>( itemAt(p, QTransform()) );
 
         //skip pixmap item
-        if (item && item->type() == QGraphicsItemCustomRect && mPixmapItem)
+        if (item && item->type() == QGraphicsItemCustomPolygon && mPixmapItem)
         {
             mCurrentItem = item;
             mPressedButton = Qt::RightButton;
@@ -417,17 +421,17 @@ void PageGraphicsScene::showContextMenu()
     QMenu *changeTypeMenu = menu->addMenu(tr("Change zone type"));
     for (ZoneType zt = 0; zt < ZT_Count; zt++)
     {
-        QAction *action = changeTypeMenu->addAction( Zone::zoneToString(zt) );
+        QAction *action = changeTypeMenu->addAction( PageZoneModel::zoneToString(zt) );
         action->setData( zt );
         action->setCheckable( true );
-        action->setChecked( mCurrentItem->zone()->zoneType() == zt );
+        action->setChecked( mCurrentItem->getZone()->zoneType() == zt );
         connect( action, SIGNAL( triggered() ), this, SLOT( onChangeZoneType() ) );
     }
 
     //edit sheet
-    if (mCurrentItem->zone()->zoneType() == ZT_Sheet)
+    if (mCurrentItem->getZone()->zoneType() == ZT_Sheet)
     {
-        QMenu *changeTypeMenu = menu->addMenu(Zone::zoneToString(ZT_Sheet));
+        QMenu *changeTypeMenu = menu->addMenu(PageZoneModel::zoneToString(ZT_Sheet));
 
         changeTypeMenu->addAction( tr("Add vertical line") );
         changeTypeMenu->addAction( tr("Add horizontal line") );

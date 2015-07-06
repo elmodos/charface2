@@ -3,6 +3,7 @@
 
 #include <QRect>
 #include <QColor>
+#include <QPolygon>
 
 enum {
     ZT_Unknown = 0,
@@ -18,14 +19,21 @@ typedef int ZoneType;
 class QXmlStreamWriter;
 class QDomElement;
 
-class Zone : public QRect
+class PageZoneModel : public QObject
 {
+    Q_OBJECT
 
 public:
-    Zone();
-    Zone(const Zone &other);
 
+    //
+    PageZoneModel();
+    PageZoneModel(const QRect &rectangle);
+    PageZoneModel(const PageZoneModel &other);
+
+    // move from model to view
     static QColor zoneColor(const ZoneType zoneType);
+
+    //
     static QString zoneToString(ZoneType zoneType);
 
     //
@@ -33,14 +41,19 @@ public:
     void setZoneType(const ZoneType zoneType) { mZoneType = zoneType; }
 
     //
+    QJsonValue toJson() const;
     void writeToXML(QXmlStreamWriter &writer) const;
     bool readFromDomElement(const QDomElement &element);
+
+    //
+    QPolygon &getPolygon() { return mPolygon; }
 
 signals:
     void zoneTypeChanged();
 
 private:
     ZoneType mZoneType;
+    QPolygon mPolygon;
 };
 
 #endif // ZONE_H

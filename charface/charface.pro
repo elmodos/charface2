@@ -25,16 +25,16 @@ SOURCES += \
     pluginaboutdialog.cpp \
     documentmodel.cpp \
     settingsmanager.cpp \
-    zone.cpp \
     utilities.cpp \
     numbersegment.cpp \
     progressdialog.cpp \
     pagegraphicsscene.cpp \
-    zonerectitem.cpp \
-    pagelistview.cpp \
     pageitemwidget.cpp \
-    pagegraphicsview.cpp \
-    pagemodel.cpp
+    pagemodel.cpp \
+    pagezonemodel.cpp \
+    pagezoneview.cpp \
+    pageview.cpp \
+    documentlistview.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -44,18 +44,18 @@ HEADERS += \
     pluginaboutdialog.h \
     documentmodel.h \
     settingsmanager.h \
-    zone.h \
     utilities.h \
     numbersegment.h \
     progressdialog.h \
     pagegraphicsscene.h \
-    zonerectitem.h \
-    pagelistview.h \
     pageitemwidget.h \
     typedefs.h \
-    pagegraphicsview.h \
     cfplugininterface.h \
-    pagemodel.h
+    pagemodel.h \
+    pagezonemodel.h \
+    pagezoneview.h \
+    pageview.h \
+    documentlistview.h
 
 FORMS += \
     mainwindow.ui \

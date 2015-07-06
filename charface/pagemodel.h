@@ -4,11 +4,12 @@
 #include <QObject>
 #include <QList>
 #include <QIcon>
+#include <QJsonValue>
 
-#include "zone.h"
+#include "pagezonemodel.h"
 #include "cfplugininterface.h"
 
-typedef QList<Zone*> RectList;
+typedef QList<PageZoneModel*> RectList;
 
 class QXmlStreamWriter;
 class QDomElement;
@@ -21,6 +22,7 @@ public:
     ~PageModel();
 
     //
+    QJsonValue toJson() const;
     void writeToXML(QXmlStreamWriter &writer) const;
     bool readFromDomElement(const QDomElement &element);
 

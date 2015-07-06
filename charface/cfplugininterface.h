@@ -25,8 +25,8 @@ enum
 };
 typedef int PluginType;
 
-class Zone;
-typedef QList<Zone> ZoneList;
+class PageZoneModel;
+typedef QList<PageZoneModel> ZoneList;
 
 //
 class CFPluginInterface

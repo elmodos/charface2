@@ -8,10 +8,11 @@
 #include <QKeyEvent>
 #include <QApplication>
 
-#include "pagelistview.h"
+#include "documentlistview.h"
 #include "pageitemwidget.h"
+#include "documentmodel.h"
 
-PageListView::PageListView(QWidget *parent) :
+DocumentListView::DocumentListView(QWidget *parent) :
     QScrollArea(parent)
 {
     //
@@ -19,7 +20,6 @@ PageListView::PageListView(QWidget *parent) :
     //setBackgroundRole(QPalette::Base);
     setWidget(new QWidget());
     mItemsCount = 0;
-    mDelegate = NULL;
     mItemHeight = PageItemWidget::defaultHeight();
 
     //
@@ -33,15 +33,21 @@ PageListView::PageListView(QWidget *parent) :
     connect( verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onVerticalScroll(int)) );
 }
 
-PageListView::~PageListView()
+DocumentListView::~DocumentListView()
 {
     delete mOverlayWidget;
 }
 
-void PageListView::reload()
+void DocumentListView::setDocument(DocumentModel *document)
+{
+     mDocument = document;
+     reload();
+}
+
+void DocumentListView::reload()
 {
     //get items count
-    mItemsCount = mDelegate->plvItemsCount();
+    mItemsCount = mDocument->pages()->size();
 
     qDeleteAll(mWidgetsReusable);
     mWidgetsReusable.clear();
@@ -68,7 +74,7 @@ void PageListView::reload()
     updateWidgets();
 }
 
-void PageListView::clearSelection(bool refresh)
+void DocumentListView::clearSelection(bool refresh)
 {
     //clean all selection flags
     foreach (int index, mFocusIndexes)
@@ -82,7 +88,7 @@ void PageListView::clearSelection(bool refresh)
         updateWidgets();
 }
 
-void PageListView::setSelection(const IntList &list)
+void DocumentListView::setSelection(const IntList &list)
 {
     clearSelection(false);
     mFocusIndexes = list;
@@ -91,12 +97,12 @@ void PageListView::setSelection(const IntList &list)
     updateWidgets(true);
 }
 
-void PageListView::onVerticalScroll(int)
+void DocumentListView::onVerticalScroll(int)
 {
     updateWidgets();
 }
 
-void PageListView::resizeEvent(QResizeEvent *event)
+void DocumentListView::resizeEvent(QResizeEvent *event)
 {
     QScrollArea::resizeEvent(event);
 
@@ -105,7 +111,7 @@ void PageListView::resizeEvent(QResizeEvent *event)
     updateWidgets();
 }
 
-void PageListView::mouseReleaseEvent(QMouseEvent *event)
+void DocumentListView::mouseReleaseEvent(QMouseEvent *event)
 {
     //get item index
     QPoint pos = widget()->mapFromParent( event->pos() );
@@ -162,7 +168,7 @@ void PageListView::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void PageListView::keyPressEvent(QKeyEvent *event)
+void DocumentListView::keyPressEvent(QKeyEvent *event)
 {
     if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_A)
     {
@@ -178,7 +184,7 @@ void PageListView::keyPressEvent(QKeyEvent *event)
     }
 }
 
-void PageListView::updateWidgets(bool reconfigureVisibles)
+void DocumentListView::updateWidgets(bool reconfigureVisibles)
 {
     int ymin = verticalScrollBar()->value();
     int ymax = ymin + viewport()->height();
@@ -212,7 +218,7 @@ void PageListView::updateWidgets(bool reconfigureVisibles)
         if (iw)
         {
             if (reconfigureVisibles)
-                mDelegate->plvSetupItem(i,iw);
+                setupPageItem(i,iw);
             iw->resize(itemWidth, iw->height());
             iw->setHighlighted(mFocuses[i]);
             continue;
@@ -231,7 +237,7 @@ void PageListView::updateWidgets(bool reconfigureVisibles)
         }
 
         mWidgets[i] = iw;
-        mDelegate->plvSetupItem(i, iw);
+        setupPageItem(i, iw);
         iw->setHighlighted(mFocuses[i]);
 
         QRect frame(0, i * mItemHeight, viewport()->width(), mItemHeight);
@@ -241,7 +247,7 @@ void PageListView::updateWidgets(bool reconfigureVisibles)
     }
 }
 
-void PageListView::createOverlayWidget()
+void DocumentListView::createOverlayWidget()
 {
     mOverlayWidget = new QWidget(this);
     mOverlayWidget->hide();
@@ -267,4 +273,10 @@ void PageListView::createOverlayWidget()
 
     mOverlayWidget->resize( mOverlayWidget->sizeHint());
 
+}
+
+void DocumentListView::setupPageItem(const int index, PageItemWidgetRef itemWidget)
+{
+    itemWidget->setTitle( QString("Page %1").arg(index + 1) );
+    itemWidget->setPixmap( mDocument->pages()->at(index)->thumb() );
 }

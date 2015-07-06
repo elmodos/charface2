@@ -4,9 +4,9 @@
 #include <QMainWindow>
 #include <QLabel>
 
-#include "pagelistview.h"
+#include "documentlistview.h"
 #include "cfplugininterface.h"
-#include "zone.h"
+#include "pagezonemodel.h"
 
 class DocumentModel;
 class PageGraphicsScene;
@@ -15,7 +15,7 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow, ScrollItemViewDelegate
+class MainWindow : public QMainWindow
 {
     Q_OBJECT
     
@@ -24,10 +24,6 @@ public:
     ~MainWindow();
 
     void show();
-
-    //ScrollItemViewDelegate methods
-    int plvItemsCount();
-    void plvSetupItem(int index, PageItemWidgetRef itemWidget);
 
     PageGraphicsScene *pageView() { return mPageView; }
 
@@ -102,7 +98,7 @@ private:
     PageGraphicsScene *mPageView;
 
     //
-    PageListView *mItemsListView;
+    DocumentListView *mItemsListView;
 
     //
     QLabel *mLabelBatchInfo;

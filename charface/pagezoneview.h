@@ -1,35 +1,37 @@
 #ifndef ZONERECTITEM_H
 #define ZONERECTITEM_H
 
-#include <QGraphicsRectItem>
+#include <QGraphicsPolygonItem>
 #include <QStaticText>
 
-class Zone;
+class PageZoneModel;
 class PageModel;
 
 enum {
-    QGraphicsItemCustomRect = QGraphicsItem::UserType + 1
+    QGraphicsItemCustomPolygon = QGraphicsItem::UserType + 1
 };
 
-class ZoneRectItem : public QGraphicsRectItem
+class PageZoneView : public QGraphicsPolygonItem
 {
 public:
-    explicit ZoneRectItem(Zone *zone);
 
     //
-    Zone *zone() { return mZone; }
+    explicit PageZoneView(PageZoneModel *zone);
 
-    //show text
+    //
+    PageZoneModel *getZone() { return mZone; }
+
+    // show text
     void setTitle(const QString &title);
 
-    //overriden
+    // overriden
+    int type() const { return QGraphicsItemCustomPolygon; }
     QRectF boundingRect() const;
-
     QPainterPath shape() const;
-
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
-    //move
+    // TODO: redo from scratch
+    // move
     void setLeft(qreal x);
     void setTop(qreal y);
     void setRight(qreal x);
@@ -39,14 +41,12 @@ public:
     //
     void setupZoneDepent(qreal scale = 1);
 
-    int type() { return QGraphicsItemCustomRect; }
-
 protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     int mMinEdgeSize;
-    Zone *mZone;
+    PageZoneModel *mZone;
     QString mTitle;
     QStaticText mStaticText;
 

@@ -159,8 +159,8 @@ void ApplicationManager::readPages(const IntList &indexes)
         for (int i = 0; i < zonesCount; i++)
         {
             QString result;
-            Zone *zone = page->zones()->at(i);
-            QImage fragment = img->copy( zone->normalized() );
+            PageZoneModel *zone = page->zones()->at(i);
+            QImage fragment = img->copy( zone->getPolygon().boundingRect() );
             bool isOk = plugin->doOCR(fragment, result);
             qDebug() << isOk << result;
         }

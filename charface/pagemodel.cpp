@@ -2,6 +2,7 @@
 #include <QList>
 #include <QXmlStreamWriter>
 #include <QDomDocument>
+#include <QJsonArray>
 
 #include "pagemodel.h"
 #include "applicationmanager.h"
@@ -28,6 +29,28 @@ PageModel::~PageModel()
     qDeleteAll(*mZones);
     delete mZones;
 }
+
+QJsonValue PageModel::toJson() const
+{
+    QJsonObject object;
+
+    object["file"] = QJsonValue(mFileName);
+    object["thumbnail"] = QJsonValue(mThumbName);
+    object["recognized"] = QJsonValue(mRecognized);
+
+    // zones
+    QJsonArray zonesArray;
+    foreach(PageZoneModel *zone, *mZones)
+    {
+        QJsonValue zoneObject(zone->toJson());
+        zonesArray.append(zoneObject);
+    }
+    object["zones"] = QJsonValue(zonesArray);
+
+    //
+    return QJsonValue(object);
+}
+
 
 void PageModel::writeToXML(QXmlStreamWriter &writer) const
 {
@@ -61,7 +84,7 @@ bool PageModel::readFromDomElement(const QDomElement &element)
     QDomElement zoneElement = element.firstChildElement("zone");
     while ( !zoneElement.isNull())
     {
-        Zone *zone = new Zone();
+        PageZoneModel *zone = new PageZoneModel();
         zone->readFromDomElement(zoneElement);
         mZones->push_back(zone);
         zoneElement = zoneElement.nextSiblingElement("zone");
@@ -94,9 +117,9 @@ void PageModel::mergeZones(const ZoneList &zones)
         mZones->clear();
     }
 
-    foreach( Zone zone, zones )
+    foreach( PageZoneModel zone, zones )
     {
-        Zone *temp = new Zone(zone);
+        PageZoneModel *temp = new PageZoneModel(zone);
         mZones->append(temp);
     }
 }
