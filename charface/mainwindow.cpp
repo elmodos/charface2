@@ -276,6 +276,27 @@ void MainWindow::updatePluginDepent()
     updateToolbar();
 }
 
+void MainWindow::onPluginImportAction()
+{
+    // Extract plugin pointer to
+    QAction *action = qobject_cast<QAction *>( sender() );
+    void *pointer = action->data().value<void *>();
+    CFPluginInterface *plugin = reinterpret_cast<CFPluginInterface *>(pointer);
+
+    //
+    if (!plugin)
+        return;
+
+    // Cast tomport plugin
+    CFPluginImportInterface *importPlugin = dynamic_cast<CFPluginImportInterface *>(plugin);
+    if (!importPlugin)
+        return;
+
+    //
+    qDebug() << "onPluginImportAction";
+    execPluginActionImport(plugin);
+}
+
 void MainWindow::onPluginAction()
 {
 //    QAction *act = qobject_cast<QAction*>( sender() );
@@ -841,7 +862,7 @@ void MainWindow::addImportActions()
         customAction->setData(QVariant::fromValue(static_cast<void *>(plugin)));
 
         //
-        connect( customAction, SIGNAL(triggered()), this, SLOT(onPluginAction()));
+        connect( customAction, SIGNAL(triggered()), this, SLOT(onPluginImportAction()));
 
         menu->addAction(customAction);
     }

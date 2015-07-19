@@ -40,6 +40,7 @@ private slots:
     void updatePluginDepent();
     void updatePagesListWidget();
 
+    void onPluginImportAction();
     void onPluginAction();
     void onPluginEditImageChanged(int index);
 
