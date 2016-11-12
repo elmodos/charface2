@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include "pagezonemodel.h"
+#include "PageZoneModel.h"
 
 PageZoneModel::PageZoneModel() :
     mPolygon()

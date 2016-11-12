@@ -3,7 +3,7 @@
 
 #include <QWidget>
 #include <QScrollArea>
-
+#include <QListView>
 #include "typedefs.h"
 
 class DocumentListView;
@@ -13,7 +13,7 @@ class DocumentModel;
 typedef PageItemWidget* PageItemWidgetRef;
 typedef QVector<PageItemWidgetRef> WidgetList;
 
-class DocumentListView : public QScrollArea
+class DocumentListView : public QListView
 {
     Q_OBJECT
     

@@ -4,10 +4,10 @@
 #include <QDomDocument>
 #include <QJsonArray>
 
-#include "pagemodel.h"
+#include "PageModel.h"
 #include "applicationmanager.h"
 #include "settingsmanager.h"
-#include "documentmodel.h"
+#include "DocumentModel.h" // TODO remove cross references
 
 PageModel::PageModel(const QString &fileName, const QString &thumbName) :
     QObject(0)

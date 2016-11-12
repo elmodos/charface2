@@ -8,7 +8,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-#include "pagemodel.h"
+#include "PageModel.h"
+
 #define maxBatchVersionSupported (1.0f)
 #define batchFileName ("batch.xml")
 #define documentJsonName ("document.json")
@@ -27,7 +28,7 @@ public:
 
     //
     PagesList *pages() { return mPages; }
-    const QString path() const { return mPath; }
+    const QString &path() const { return mPath; }
     const QString tempPath(bool createPath);
     bool isSaved();
     void loadFromDir(const QString &path);
@@ -36,6 +37,11 @@ public:
 
     bool addFile(const QString &path, bool move);
     bool deletePage(int index);
+
+    int currentPageIndex() { return mCurrentPageIndex; }
+    void setCurrentPageIndex(int index) { mCurrentPageIndex = index; }
+
+    QString getPageThumbnailPath(const PageModel &page) const;
 
     //
     QString errorMessage() { return mErrorMessage; }
@@ -60,6 +66,8 @@ private:
 
     double mVersion;
     PagesList *mPages;
+    int mCurrentPageIndex;
+
     QString mPath;
 
     QString mErrorMessage;

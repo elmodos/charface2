@@ -1,7 +1,7 @@
 #include <QDebug>
 
-#include "progressdialog.h"
-#include "ui_progressdialog.h"
+#include "ProgressDialog.h"
+#include "ui_ProgressDialog.h"
 #include "utilities.h"
 
 ProgressDialog::ProgressDialog(QWidget *parent) :

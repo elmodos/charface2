@@ -6,11 +6,11 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsView>
 
-#include "pagezonemodel.h"
-#include "pagemodel.h"
+#include "Models/PageZoneModel.h"
+#include "Models/PageModel.h"
 #include "pagezoneview.h"
 #include "settingsmanager.h"
-#include "pageview.h"
+#include "UI/MainWindow/PageView/PageView.h"
 
 PageZoneView::PageZoneView(PageZoneModel *zone)
 {

@@ -4,7 +4,7 @@
 #include <QObject>
 
 //#include "batch.h"
-#include "progressdialog.h"
+#include "UI/ProgressDialog/ProgressDialog.h"
 #include "typedefs.h"
 
 #define appManager (ApplicationManager::instance())

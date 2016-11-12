@@ -593,7 +593,7 @@ QToolBox::tab:selected {
   <customwidget>
    <class>PageView</class>
    <extends>QGraphicsView</extends>
-   <header>pageview.h</header>
+   <header>UI/MainWindow/PageView/PageView.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

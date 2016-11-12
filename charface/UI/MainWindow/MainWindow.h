@@ -3,10 +3,11 @@
 
 #include <QMainWindow>
 #include <QLabel>
+#include <QSharedPointer>
 
-#include "documentlistview.h"
+#include "UI/MainWindow/DocumentListView/DocumentListView.h"
 #include "cfplugininterface.h"
-#include "pagezonemodel.h"
+#include "Models/PageZoneModel.h"
 
 class DocumentModel;
 class PageGraphicsScene;
@@ -20,7 +21,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
     
 public:
-    explicit MainWindow(DocumentModel &document, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(DocumentModel *document, QWidget *parent = 0);
     ~MainWindow();
 
     void show();
@@ -61,6 +63,7 @@ private slots:
     void onAnalyzeAll();
 
 private:
+    void initialize();
     void updateToolbar();
     void updateImageEditPluginsStackWidget();
     void updateSelectType(ZoneType zoneType);
@@ -91,8 +94,7 @@ private:
     Ui::MainWindow *ui;
 
     //
-    DocumentModel *mDocument;
-    int mCurrentPageIndex;
+    QSharedPointer<DocumentModel> mDocument;
 
     //
     void setPageScale(qreal scale);

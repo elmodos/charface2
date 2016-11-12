@@ -19,50 +19,50 @@ macx: {
 SOURCES += \
     main.cpp \
     applicationmanager.cpp \
-    pluginmanager.cpp \
-    mainwindow.cpp \
-    pluginswindow.cpp \
-    pluginaboutdialog.cpp \
-    documentmodel.cpp \
-    settingsmanager.cpp \
-    utilities.cpp \
+    Models/DocumentModel.cpp \
+    Models/PageModel.cpp \
+    Models/PageZoneModel.cpp \
     numbersegment.cpp \
-    progressdialog.cpp \
-    pagegraphicsscene.cpp \
-    pageitemwidget.cpp \
-    pagemodel.cpp \
-    pagezonemodel.cpp \
-    pagezoneview.cpp \
-    pageview.cpp \
-    documentlistview.cpp
+    pluginmanager.cpp \
+    settingsmanager.cpp \
+    UI/MainWindow/DocumentListView/DocumentListView.cpp \
+    UI/MainWindow/DocumentListView/PageItemWidget/PageItemWidget.cpp \
+    UI/MainWindow/MainWindow.cpp \
+    UI/MainWindow/PageGraphicsScene/PageGraphicsScene.cpp \
+    UI/MainWindow/PageGraphicsScene/PageZoneView/PageZoneView.h.cpp \
+    UI/MainWindow/PageView/PageView.cpp \
+    UI/PluginAboutDialog/PluginAboutDialog.cpp \
+    UI/PluginsWindow/PluginsWindow.cpp \
+    UI/ProgressDialog/ProgressDialog.cpp \
+    utilities.cpp
 
 HEADERS += \
-    mainwindow.h \
     applicationmanager.h \
-    pluginmanager.h \
-    pluginswindow.h \
-    pluginaboutdialog.h \
-    documentmodel.h \
-    settingsmanager.h \
-    utilities.h \
-    numbersegment.h \
-    progressdialog.h \
-    pagegraphicsscene.h \
-    pageitemwidget.h \
-    typedefs.h \
     cfplugininterface.h \
-    pagemodel.h \
-    pagezonemodel.h \
-    pagezoneview.h \
-    pageview.h \
-    documentlistview.h
+    Models/DocumentModel.h \
+    Models/PageModel.h \
+    Models/PageZoneModel.h \
+    numbersegment.h \
+    pluginmanager.h \
+    settingsmanager.h \
+    typedefs.h \
+    UI/MainWindow/DocumentListView/DocumentListView.h \
+    UI/MainWindow/DocumentListView/PageItemWidget/PageItemWidget.h \
+    UI/MainWindow/MainWindow.h \
+    UI/MainWindow/PageGraphicsScene/PageGraphicsScene.h \
+    UI/MainWindow/PageGraphicsScene/PageZoneView/PageZoneView.h \
+    UI/MainWindow/PageView/PageView.h \
+    UI/PluginAboutDialog/PluginAboutDialog.h \
+    UI/PluginsWindow/PluginsWindow.h \
+    UI/ProgressDialog/ProgressDialog.h \
+    utilities.h
 
 FORMS += \
-    mainwindow.ui \
-    pluginswindow.ui \
-    pluginaboutdialog.ui \
-    progressdialog.ui \
-    scrollitem.ui
+    UI/MainWindow/DocumentListView/PageItemWidget/PageItemWidget.ui \
+    UI/MainWindow/MainWindow.ui \
+    UI/PluginAboutDialog/PluginAboutDialog.ui \
+    UI/PluginsWindow/PluginsWindow.ui \
+    UI/ProgressDialog/ProgressDialog.ui
 
 RESOURCES += \
     icons.qrc

@@ -1,6 +1,7 @@
 #ifndef ZONE_H
 #define ZONE_H
 
+#include <QObject>
 #include <QRect>
 #include <QColor>
 #include <QPolygon>

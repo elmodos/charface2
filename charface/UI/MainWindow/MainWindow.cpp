@@ -10,32 +10,47 @@
 #include "utilities.h"
 #include "pluginmanager.h"
 #include "settingsmanager.h"
-#include "pagegraphicsscene.h"
-#include "mainwindow.h"
+#include "UI/MainWindow/PageGraphicsScene/PageGraphicsScene.h"
+#include "MainWindow.h"
 #include "applicationmanager.h"
-#include "ui_mainwindow.h"
-#include "documentmodel.h"
+#include "ui_MainWindow.h"
+#include "Models/DocumentModel.h"
 #include "cfplugininterface.h"
-#include "pagegraphicsscene.h"
-#include "pageitemwidget.h"
-#include "pluginswindow.h"
+#include "UI/MainWindow/PageGraphicsScene/PageGraphicsScene.h"
+#include "UI/MainWindow/DocumentListView/PageItemWidget/PageItemWidget.h"
+#include "UI/PluginsWindow/PluginsWindow.h"
 
-MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    mDocument(&document)
+    mDocument(new DocumentModel())
+{
+    initialize();
+}
+
+MainWindow::MainWindow(DocumentModel *document, QWidget *parent) :
+    QMainWindow(parent),
+    ui(new Ui::MainWindow),
+    mDocument(document)
+{
+    initialize();
+}
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::initialize()
 {
     //
     ui->setupUi(this);
     setWindowTitle(SettingsManager::instance()->mainWindowTitle());
     ui->menubar->hide();
 
-    //
-    mCurrentPageIndex = -1;
-
     //add items view
     mItemsListView = new DocumentListView();
-    mItemsListView->setDocument(mDocument);
+    mItemsListView->setDocument(mDocument.data());
     ui->widget->layout()->addWidget(mItemsListView);
     connect( mItemsListView, SIGNAL( itemFocused(int) ), this, SLOT( onPageListSelectionChanged(int) ) );
 
@@ -81,7 +96,7 @@ MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
     //setup handlers
     connect( mPageView, SIGNAL( pageChanged() ), this, SLOT( onPageViewChangedPage() ) );
     connect( PluginManager::instance(), SIGNAL(pluginsListChanged()), this, SLOT(updatePluginDepent()) );
-    connect( appManager, SIGNAL(batchModified()), this, SLOT(updatePagesListWidget()) );
+    //connect( appManager, SIGNAL(batchModified()), this, SLOT(updatePagesListWidget()) );
     connect( ui->toolBox, SIGNAL(currentChanged(int)), this, SLOT(onPluginEditImageChanged(int)) );
 
     //
@@ -93,12 +108,6 @@ MainWindow::MainWindow(DocumentModel &document, QWidget *parent) :
     //
     setupStatusBar();
     updateStatusBar();
-
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
 }
 
 void MainWindow::onPlugins()
@@ -158,64 +167,6 @@ void MainWindow::onLoadFile()
     updatePagesListWidget();
 }
 
-bool MainWindow::askToSaveBatchIsOk()
-{
-    //
-    bool ok = true;
-
-    //if not saved - show dialog
-    if( !mDocument->isSaved() )
-    {
-        //
-        QMessageBox messageBox(QMessageBox::Question,"Not saved","Batch is not saved. Save it now?",QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-        messageBox.setDetailedText(QString("Batch is stored at temporary location \"%1\"").arg(mDocument->path()));
-        int answer = messageBox.exec();
-
-        //
-        switch (answer)
-        {
-            case QMessageBox::Yes:
-                ok = onBatchSaveAs();
-                break;
-
-            case QMessageBox::No:
-                break;
-
-            case QMessageBox::Cancel:
-            default:
-                ok = false;
-                break;
-        }
-    }
-    return ok;
-}
-
-void MainWindow::showPluginsDialog()
-{
-    PluginsWindow window;
-    window.exec();
-}
-
-void MainWindow::setPageScale(qreal scale)
-{
-    //check range
-    qreal scaleMax = settingsManager->pageScaleMax();
-    qreal scaleMin = settingsManager->pageScaleMin();
-
-    if (scale > scaleMax) scale = scaleMax;
-    if (scale < scaleMin) scale = scaleMin;
-
-    //store value
-    mPageView->setScaleInView(scale);
-
-    //scale
-    ui->pageView->setZoom(scale);
-
-    //update combo box
-    int scalePercent = scale * 100;
-    ui->labelZoomScale->setText(QString::number(scalePercent) + "%");
-}
-
 bool MainWindow::onBatchNew()
 {
     if (askToSaveBatchIsOk())
@@ -261,19 +212,6 @@ bool MainWindow::onBatchSaveAs()
 void MainWindow::onEditImage(bool down)
 {
     ui->stackedWidget->setCurrentIndex(down ? 1 : 0);
-}
-
-void MainWindow::updateUI()
-{
-    //updatePluginDepent();
-    updatePagesListWidget();
-    updateToolbar();
-}
-
-void MainWindow::updatePluginDepent()
-{
-    updateImageEditPluginsStackWidget();
-    updateToolbar();
 }
 
 void MainWindow::onPluginImportAction()
@@ -435,7 +373,7 @@ void MainWindow::onPageListSelectionChanged(int index)
 
     //scale
     ui->buttonZoomFitWidth->click();
-    mCurrentPageIndex = index;
+    mDocument->setCurrentPageIndex(index);
 
     //
     updateStatusBar();
@@ -708,6 +646,77 @@ void MainWindow::onMouseModeChanged()
     mPageView->setDeleteWithMouseClick( sender() == ui->buttonMouseDelete );
 }
 
+bool MainWindow::askToSaveBatchIsOk()
+{
+    //
+    bool ok = true;
+
+    //if not saved - show dialog
+    if( !mDocument->isSaved() )
+    {
+        //
+        QMessageBox messageBox(QMessageBox::Question,"Not saved","Batch is not saved. Save it now?",QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
+        messageBox.setDetailedText(QString("Batch is stored at temporary location \"%1\"").arg(mDocument->path()));
+        int answer = messageBox.exec();
+
+        //
+        switch (answer)
+        {
+            case QMessageBox::Yes:
+                ok = onBatchSaveAs();
+                break;
+
+            case QMessageBox::No:
+                break;
+
+            case QMessageBox::Cancel:
+            default:
+                ok = false;
+                break;
+        }
+    }
+    return ok;
+}
+
+void MainWindow::showPluginsDialog()
+{
+    PluginsWindow window;
+    window.exec();
+}
+
+void MainWindow::setPageScale(qreal scale)
+{
+    //check range
+    qreal scaleMax = settingsManager->pageScaleMax();
+    qreal scaleMin = settingsManager->pageScaleMin();
+
+    if (scale > scaleMax) scale = scaleMax;
+    if (scale < scaleMin) scale = scaleMin;
+
+    //store value
+    mPageView->setScaleInView(scale);
+
+    //scale
+    ui->pageView->setZoom(scale);
+
+    //update combo box
+    int scalePercent = scale * 100;
+    ui->labelZoomScale->setText(QString::number(scalePercent) + "%");
+}
+
+void MainWindow::updateUI()
+{
+    //updatePluginDepent();
+    updatePagesListWidget();
+    updateToolbar();
+}
+
+void MainWindow::updatePluginDepent()
+{
+    updateImageEditPluginsStackWidget();
+    updateToolbar();
+}
+
 void MainWindow::updatePagesListWidget()
 {
     //
@@ -798,7 +807,7 @@ void MainWindow::updateStatusBar()
         QString strResolution = QString("%1x%2").arg(pageSize.width()).arg(pageSize.height());
 
         str = tr("<b>Page:</b>%1 <b>Zones:</b>%2 <b>Recognized:</b>%3 <b>Resolution:</b>%4 <b>File:</b>%5")
-                .arg(mCurrentPageIndex + 1)
+                .arg(mDocument->currentPageIndex() + 1)
                 .arg(page->zones()->size())
                 .arg(strRecognozed)
                 .arg(strResolution)

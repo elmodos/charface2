@@ -1,6 +1,6 @@
-#include "pluginaboutdialog.h"
+#include "PluginAboutDialog.h"
 #include "cfplugininterface.h"
-#include "ui_pluginaboutdialog.h"
+#include "ui_PluginAboutDialog.h"
 
 PluginAboutDialog::PluginAboutDialog(CFPluginInterface *plugin) :
     QDialog(0),

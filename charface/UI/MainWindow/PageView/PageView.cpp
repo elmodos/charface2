@@ -1,4 +1,4 @@
-#include "pageview.h"
+#include "PageView.h"
 
 PageView::PageView(QWidget *parent) :
     QGraphicsView(parent)

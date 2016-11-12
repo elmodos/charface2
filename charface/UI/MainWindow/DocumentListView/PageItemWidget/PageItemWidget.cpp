@@ -1,7 +1,7 @@
 #include <QDebug>
 
-#include "pageitemwidget.h"
-#include "ui_scrollitem.h"
+#include "PageItemWidget.h"
+#include "ui_PageItemWidget.h"
 
 int PageItemWidget::allocatedcount = 0;
 

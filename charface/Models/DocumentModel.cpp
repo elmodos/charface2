@@ -8,12 +8,13 @@
 #include <iterator>
 #include <QJsonArray>
 
-#include "documentmodel.h"
+#include "Models/DocumentModel.h"
 #include "settingsmanager.h"
 
 DocumentModel::DocumentModel(const QString path) :
     QObject(0),
-    mVersion(maxBatchVersionSupported)
+    mVersion(maxBatchVersionSupported),
+    mCurrentPageIndex(-1)
 {
     mPages = new PagesList();
     mPath = path;
@@ -152,6 +153,11 @@ bool DocumentModel::deletePage(int index)
     delete page;
 
     return res;
+}
+
+QString DocumentModel::getPageThumbnailPath(const PageModel &page) const
+{
+    return QDir(mPath).absoluteFilePath(page.thumbName());
 }
 
 bool DocumentModel::saveJsonToFile(const QString &fileName)

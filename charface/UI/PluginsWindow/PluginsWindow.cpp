@@ -5,9 +5,9 @@
 
 #include "pluginmanager.h"
 #include "applicationmanager.h"
-#include "pluginswindow.h"
-#include "ui_pluginswindow.h"
-#include "pluginaboutdialog.h"
+#include "UI/PluginsWindow/PluginsWindow.h"
+#include "ui_PluginsWindow.h"
+#include "UI/PluginAboutDialog/PluginAboutDialog.h"
 
 PluginsWindow::PluginsWindow(QWidget *parent) :
     QDialog(parent),

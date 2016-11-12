@@ -8,9 +8,9 @@
 #include <math.h>
 
 #include "settingsmanager.h"
-#include "pagegraphicsscene.h"
+#include "UI/MainWindow/PageGraphicsScene/PageGraphicsScene.h"
 #include "pagezoneview.h"
-#include "pagezonemodel.h"
+#include "Models/PageZoneModel.h"
 
 PageGraphicsScene::PageGraphicsScene(QWidget *parent)
     : QGraphicsScene(parent),

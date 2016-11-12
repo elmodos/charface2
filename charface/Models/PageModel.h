@@ -6,7 +6,7 @@
 #include <QIcon>
 #include <QJsonValue>
 
-#include "pagezonemodel.h"
+#include "PageZoneModel.h"
 #include "cfplugininterface.h"
 
 typedef QList<PageZoneModel*> RectList;
@@ -29,7 +29,7 @@ public:
     //
     QString fileName() { return mFileName; }
     QString fileNameAbsolute();
-    QString thumbName() { return mThumbName; }
+    QString thumbName() const { return mThumbName; }
     bool recognized() { return mRecognized; }
     void setRecognized(const bool val) { mRecognized = val; }
 

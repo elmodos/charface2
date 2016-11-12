@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 
-#include "pagemodel.h"
+#include "Models/PageModel.h"
 #include "pagezoneview.h"
 
 enum {

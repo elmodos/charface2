@@ -4,10 +4,10 @@
 #include <unistd.h>
 
 #include "applicationmanager.h"
-#include "progressdialog.h"
+#include "UI/ProgressDialog/ProgressDialog.h"
 #include "pluginmanager.h"
 #include "settingsmanager.h"
-#include "documentmodel.h"
+#include "Models/DocumentModel.h"
 
 ApplicationManager * ApplicationManager::mInstance = NULL;
 
